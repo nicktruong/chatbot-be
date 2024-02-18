@@ -1,7 +1,7 @@
 import { omit } from 'ramda';
 import { Exclude } from 'class-transformer';
 
-import { Column, Entity, BeforeInsert } from 'typeorm';
+import { Column, Entity, BeforeInsert, BeforeUpdate } from 'typeorm';
 
 import { hash } from '@/utils/helpers';
 import { UserRole } from '@/common/enums';
@@ -22,6 +22,7 @@ export class Admin extends BaseEntity {
   name: string;
 
   @BeforeInsert()
+  @BeforeUpdate()
   private async setInsertingData(): Promise<void> {
     const saltRounds = 10;
 

@@ -20,3 +20,5 @@ export const configuration = async (): Promise<TConfig> => {
 
   return mergeDeepRight(baseConfig, customConfig);
 };
+
+export { EnvSchema } from './envs/schema';
