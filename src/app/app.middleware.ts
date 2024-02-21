@@ -13,7 +13,12 @@ export const loadMiddlewares = (app: INestApplication): void => {
     defaultVersion: '1',
   });
 
-  app.enableCors();
+  app.enableCors({
+    origin: (origin, callback) => {
+      const cors = new RegExp(process.env.ORIGIN).test(origin);
+      callback(null, cors);
+    },
+  });
 
   /**
    * ! If you use GraphQL, we can have some problems
