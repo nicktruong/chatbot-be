@@ -591,6 +591,11 @@
     "@types/yargs" "^17.0.8"
     chalk "^4.0.0"
 
+"@joaomoreno/unique-names-generator@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@joaomoreno/unique-names-generator/-/unique-names-generator-5.1.0.tgz#d577d425aed794c44c0e8863cddd5dea349f74f3"
+  integrity sha512-KEVThTpUIKPb7dBKJ9mJ3WYnD1mJZZsEinCSp9CVEPlWbDagurFv1RKRjvvujrLfJzsGc0HkBHS9W8Bughao4A==
+
 "@jridgewell/gen-mapping@^0.1.0":
   version "0.1.1"
   resolved "https://registry.npmjs.org/@jridgewell/gen-mapping/-/gen-mapping-0.1.1.tgz"
