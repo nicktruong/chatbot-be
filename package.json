@@ -26,6 +26,7 @@
     "seed:run": "ts-node -r tsconfig-paths/register ./src/database/seeds/run-seed.ts"
   },
   "dependencies": {
+    "@golevelup/ts-jest": "^0.4.0",
     "@joaomoreno/unique-names-generator": "^5.1.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
