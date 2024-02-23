@@ -1,6 +1,6 @@
 import { Param } from '@nestjs/common';
 
-import { InjectController, InjectRoute, User } from '@/decorators';
+import { InjectController, InjectRoute, ReqUser } from '@/decorators';
 
 import botRoutes from './bot.routes';
 import { BotService } from './bot.service';
@@ -13,14 +13,16 @@ export class BotController {
   constructor(private readonly botService: BotService) {}
 
   @InjectRoute(botRoutes.create)
-  public async createOne(@User() user: ILocalStrategy): Promise<CreatedBotDto> {
+  public async createOne(
+    @ReqUser() user: ILocalStrategy,
+  ): Promise<CreatedBotDto> {
     const createdBot = await this.botService.create(user.element.id);
 
     return createdBot;
   }
 
   @InjectRoute(botRoutes.getAll)
-  public async getAll(@User() user: ILocalStrategy): Promise<GotBotDto[]> {
+  public async getAll(@ReqUser() user: ILocalStrategy): Promise<GotBotDto[]> {
     const gotBots = await this.botService.getAll(user.element.id);
 
     return gotBots;
