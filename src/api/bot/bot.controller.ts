@@ -1,25 +1,27 @@
-import { Body, Param } from '@nestjs/common';
+import { Param } from '@nestjs/common';
 
-import { InjectController, InjectRoute } from '@/decorators';
+import { InjectController, InjectRoute, User } from '@/decorators';
 
 import botRoutes from './bot.routes';
 import { BotService } from './bot.service';
-import { CreateBotDto, GotBotDto, CreatedBotDto } from './dto';
+import { GotBotDto, CreatedBotDto } from './dto';
+
+import type { ILocalStrategy } from '../auth/strategies';
 
 @InjectController({ name: botRoutes.index })
 export class BotController {
   constructor(private readonly botService: BotService) {}
 
   @InjectRoute(botRoutes.create)
-  public async createOne(@Body() data: CreateBotDto): Promise<CreatedBotDto> {
-    const createdBot = await this.botService.create(data);
+  public async createOne(@User() user: ILocalStrategy): Promise<CreatedBotDto> {
+    const createdBot = await this.botService.create(user.element.id);
 
     return createdBot;
   }
 
   @InjectRoute(botRoutes.getAll)
-  public async getAll(@Param('userId') userId: string): Promise<GotBotDto[]> {
-    const gotBots = await this.botService.getAll(userId);
+  public async getAll(@User() user: ILocalStrategy): Promise<GotBotDto[]> {
+    const gotBots = await this.botService.getAll(user.element.id);
 
     return gotBots;
   }
