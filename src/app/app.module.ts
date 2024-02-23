@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from './app.controller';
 
+import { BotModule } from '@/api/bot/bot.module';
 import { AuthModule } from '@/api/auth/auth.module';
 import { configuration, EnvSchema } from '@/config';
 import { TokenModule } from '@/api/token/token.module';
@@ -16,6 +17,7 @@ import { CustomerModule } from '@/api/customer/customer.module';
       validationSchema: EnvSchema,
       load: [configuration],
     }),
+    BotModule,
     AuthModule,
     TokenModule,
     AdminModule,
