@@ -4,7 +4,6 @@ import { createMock } from '@golevelup/ts-jest';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
 import { Bot } from './entities';
-import { CreateBotDto } from './dto';
 import { BotService } from './bot.service';
 import { BotRepository } from './bot.repository';
 
@@ -45,6 +44,7 @@ describe('BotService', () => {
     },
   ];
   creator.bots = bots;
+  const id = bots[0].id;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -72,9 +72,7 @@ describe('BotService', () => {
     it('should create a bot', async () => {
       botRepository.create.mockReturnValueOnce(bots[0]);
 
-      const data: CreateBotDto = { creatorId: '123' };
-
-      const result = await botService.create(data);
+      const result = await botService.create(id);
 
       expect(result).toEqual(omit(['creator'], bots[0]));
       expect(botRepository.create).toHaveBeenCalled();
@@ -87,12 +85,12 @@ describe('BotService', () => {
     it('should get all bots of user', async () => {
       botRepository.findBy.mockResolvedValueOnce(bots);
 
-      const result = await botService.getAll('123');
+      const result = await botService.getAll(id);
 
       expect(result).toEqual(bots);
       expect(botRepository.findBy).toHaveBeenCalled();
       expect(botRepository.findBy.mock.calls[0][0]).toEqual({
-        creator: { id: '123' },
+        creator: { id },
       });
     });
   });
@@ -101,11 +99,11 @@ describe('BotService', () => {
     it('should delete the bot by id', async () => {
       botRepository.delete.mockResolvedValueOnce('test value' as any);
 
-      const result = await botService.deleteById('123');
+      const result = await botService.deleteById(id);
 
       expect(result).toEqual('test value');
       expect(botRepository.delete).toHaveBeenCalled();
-      expect(botRepository.delete.mock.calls[0][0]).toEqual({ id: '123' });
+      expect(botRepository.delete.mock.calls[0][0]).toEqual({ id });
     });
   });
 });

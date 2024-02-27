@@ -1,9 +1,11 @@
 import { Test } from '@nestjs/testing';
 import { createMock } from '@golevelup/ts-jest';
 
+import { CreatedBotDto } from './dto';
 import { BotService } from './bot.service';
 import { BotController } from './bot.controller';
-import { CreateBotDto, CreatedBotDto } from './dto';
+
+import { ILocalStrategy } from '../auth/strategies';
 
 import type { DeepMocked } from '@golevelup/ts-jest';
 
@@ -27,6 +29,7 @@ describe('BotController', () => {
       updatedAt: new Date(),
     },
   ];
+  const id = bots[0].id;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -43,13 +46,12 @@ describe('BotController', () => {
     it('should create a bot', async () => {
       botService.create.mockResolvedValueOnce(bots[0]);
 
-      const data: CreateBotDto = { creatorId: '123' };
-
-      const result = await botController.createOne(data);
+      const user = { element: { id } } as ILocalStrategy;
+      const result = await botController.createOne(user);
 
       expect(result).toEqual(bots[0]);
       expect(botService.create).toHaveBeenCalled();
-      expect(botService.create.mock.calls[0][0]).toEqual(data);
+      expect(botService.create.mock.calls[0][0]).toEqual(user.element.id);
     });
   });
 
@@ -57,21 +59,22 @@ describe('BotController', () => {
     it('should get all bots of user', async () => {
       botService.getAll.mockResolvedValueOnce(bots);
 
-      const result = await botController.getAll('123');
+      const user = { element: { id } } as ILocalStrategy;
+      const result = await botController.getAll(user);
 
       expect(result).toEqual(bots);
       expect(botService.getAll).toHaveBeenCalled();
-      expect(botService.getAll.mock.calls[0][0]).toEqual('123');
+      expect(botService.getAll.mock.calls[0][0]).toEqual(user.element.id);
     });
   });
 
   describe('deleteById', () => {
     it('should delete the bot by id', async () => {
-      const result = await botController.deleteById('123');
+      const result = await botController.deleteById(id);
 
-      expect(result).toEqual('123');
+      expect(result).toEqual(id);
       expect(botService.deleteById).toHaveBeenCalled();
-      expect(botService.deleteById.mock.calls[0][0]).toEqual('123');
+      expect(botService.deleteById.mock.calls[0][0]).toEqual(id);
     });
   });
 });

@@ -1,6 +1,6 @@
 import { Body, Param } from '@nestjs/common';
 
-import { IJwtStrategy } from '@/api/auth/strategies';
+import { IJwtStrategy, ILocalStrategy } from '@/api/auth/strategies';
 import { InjectController, InjectRoute, ReqUser } from '@/decorators';
 
 import customerRoutes from './customer.routes';
@@ -36,8 +36,12 @@ export class CustomerController {
   }
 
   @InjectRoute(customerRoutes.getMe)
-  public async getMe(@ReqUser() user: Customer): Promise<GotCustomerDetailDto> {
-    const gotCustomer = await this.customerService.getDetailById(user?.id);
+  public async getMe(
+    @ReqUser() user: ILocalStrategy,
+  ): Promise<GotCustomerDetailDto> {
+    const gotCustomer = await this.customerService.getDetailById(
+      user.element.id,
+    );
 
     return gotCustomer;
   }

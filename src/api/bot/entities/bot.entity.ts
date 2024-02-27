@@ -13,7 +13,7 @@ export class Bot extends BaseEntity {
 
   @Column({
     name: 'publish_date',
-    type: 'timestamp',
+    type: 'timestamptz',
     nullable: true,
   })
   publishDate: Date;
