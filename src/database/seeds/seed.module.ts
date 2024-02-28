@@ -5,10 +5,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EnvSchema, configuration } from '@/config';
 
 import { AdminSeedModule } from './admin/admin-seed.module';
+import { FlowTypeSeedModule } from './flow-type/flow-type-seed.module';
 
 @Module({
   imports: [
-    AdminSeedModule,
     ConfigModule.forRoot({
       validationSchema: EnvSchema,
       load: [configuration],
@@ -18,6 +18,8 @@ import { AdminSeedModule } from './admin/admin-seed.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => configService.get('db'),
     }),
+    AdminSeedModule,
+    FlowTypeSeedModule,
   ],
 })
 export class SeedModule {}
