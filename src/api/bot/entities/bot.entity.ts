@@ -1,5 +1,6 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
+import { Flow } from '@/api/flow/entities';
 import { Customer } from '@/api/customer/entities';
 import { Base as BaseEntity } from '@/common/entities';
 
@@ -17,4 +18,7 @@ export class Bot extends BaseEntity {
     nullable: true,
   })
   publishDate: Date;
+
+  @OneToMany(() => Flow, (flow) => flow.bot)
+  flows: Flow[];
 }

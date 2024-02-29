@@ -5,8 +5,10 @@ import { Bot } from './entities';
 import { BotService } from './bot.service';
 import { BotController } from './bot.controller';
 
+import { FlowModule } from '../flow/flow.module';
+
 @Module({
-  imports: [TypeOrmModule.forFeature([Bot])],
+  imports: [FlowModule, TypeOrmModule.forFeature([Bot])],
   controllers: [BotController],
   providers: [BotService],
   exports: [BotService],

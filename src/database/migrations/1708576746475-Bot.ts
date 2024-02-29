@@ -13,7 +13,7 @@ export class Bot1708576746475 implements MigrationInterface {
         columns: [
           {
             name: 'id',
-            type: 'varchar',
+            type: 'uuid',
             isPrimary: true,
             generationStrategy: 'uuid',
             default: 'uuid_generate_v4()',
@@ -23,8 +23,8 @@ export class Bot1708576746475 implements MigrationInterface {
             type: 'varchar',
           },
           {
-            name: 'creatorId',
-            type: 'varchar',
+            name: 'creator_id',
+            type: 'uuid',
           },
           {
             name: 'publish_date',
@@ -49,7 +49,7 @@ export class Bot1708576746475 implements MigrationInterface {
     await queryRunner.createForeignKey(
       'bots',
       new TableForeignKey({
-        columnNames: ['creatorId'],
+        columnNames: ['creator_id'],
         referencedTableName: 'customers',
         referencedColumnNames: ['id'],
       }),

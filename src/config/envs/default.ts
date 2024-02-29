@@ -1,3 +1,5 @@
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+
 import { Time } from '@/utils/constants';
 
 export const config = {
@@ -20,6 +22,8 @@ export const config = {
     logging: false,
     synchronize: false,
     autoLoadEntities: true,
+
+    namingStrategy: new SnakeNamingStrategy(),
   },
   jwt: {
     secret: process.env.JWT_SECRET,
