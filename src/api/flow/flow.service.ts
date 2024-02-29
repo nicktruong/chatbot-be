@@ -3,10 +3,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Flow } from './entities';
-import { CreatedFlowDto } from './dto';
 import { FlowRepository } from './flow.repository';
+import { CreateFlowDto, CreatedFlowDto } from './dto';
 
-import { CreateFlowDto } from './dto/create-flow.dto';
 import { FlowTypeService } from '../flow-type/flow-type.service';
 
 // TODO: Auto increment flow name

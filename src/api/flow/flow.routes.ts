@@ -15,5 +15,5 @@ export default {
     swaggerInfo: {
       responses: [{ status: HttpStatus.CREATED, type: CreatedFlowDto }],
     },
-  }
+  },
 };

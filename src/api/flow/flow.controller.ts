@@ -3,10 +3,8 @@ import { Body } from '@nestjs/common';
 import { InjectController, InjectRoute } from '@/decorators';
 
 import flowRoutes from './flow.routes';
-import { CreatedFlowDto } from './dto';
 import { FlowService } from './flow.service';
-
-import { CreateFlowDto } from './dto/create-flow.dto';
+import { CreateFlowDto, CreatedFlowDto } from './dto';
 
 @InjectController({ name: flowRoutes.index })
 export class FlowController {
