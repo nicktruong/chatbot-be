@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Flow } from './entities';
 import { FlowRepository } from './flow.repository';
-import { CreateFlowDto, CreatedFlowDto } from './dto';
+import { CreateFlowDto, CreatedFlowDto, GotFlowDto } from './dto';
 
 import { FlowTypeService } from '../flow-type/flow-type.service';
 
@@ -33,5 +33,23 @@ export class FlowService {
     await this.flowRepository.save(flow);
 
     return omit(['bot'], { ...flow, flowType });
+  }
+
+  public async getAll(userId: string, botId: string): Promise<GotFlowDto[]> {
+    const flows = await this.flowRepository.find({
+      where: {
+        bot: {
+          id: botId,
+          creator: {
+            id: userId,
+          },
+        },
+      },
+      relations: {
+        flowType: true,
+      },
+    });
+
+    return flows;
   }
 }
