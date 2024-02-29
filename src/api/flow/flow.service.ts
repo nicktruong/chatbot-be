@@ -4,8 +4,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Flow } from './entities';
 import { FlowRepository } from './flow.repository';
+import { DuplicateUniqueFlowException } from './flow.exceptions';
 import { CreateFlowDto, CreatedFlowDto, GotFlowDto } from './dto';
 
+import { FlowTypeEnum } from '../flow-type/enums';
 import { FlowTypeService } from '../flow-type/flow-type.service';
 
 // TODO: Auto increment flow name
@@ -24,6 +26,15 @@ export class FlowService {
     const flowType = await this.flowTypeService.getByType({
       type: data.flowType,
     });
+
+    const count = await this.flowRepository.countBy({
+      flowType: { type: data.flowType },
+    });
+
+    // Only CUSTOM flow can be created more than one
+    if (count > 0 && data.flowType !== FlowTypeEnum.CUSTOM) {
+      throw new DuplicateUniqueFlowException();
+    }
 
     const flow = this.flowRepository.create({
       bot: { id: data.botId },
