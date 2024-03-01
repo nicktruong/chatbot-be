@@ -38,6 +38,16 @@ export class Node1709265450342 implements MigrationInterface {
             name: 'node_type_id',
             type: 'uuid',
           },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: `('now'::text)::timestamp(6) with time zone`,
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: `('now'::text)::timestamp(6) with time zone`,
+          },
         ],
       }),
     );

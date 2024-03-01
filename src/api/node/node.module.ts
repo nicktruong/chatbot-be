@@ -3,13 +3,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { Node } from './entities';
 import { NodeService } from './node.service';
+import { NodeController } from './node.controller';
 
 import { FlowModule } from '../flow/flow.module';
 import { NodeTypeModule } from '../node-type/node-type.module';
 
 @Module({
   imports: [FlowModule, NodeTypeModule, TypeOrmModule.forFeature([Node])],
-  controllers: [], // TODO: Add controller
+  controllers: [NodeController],
   providers: [NodeService],
   exports: [NodeService],
 })

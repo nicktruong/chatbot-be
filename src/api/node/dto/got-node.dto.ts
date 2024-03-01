@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ActionedBaseDto } from '@/common/dto';
 import { GotNodeTypeDto } from '@/api/node-type/dto';
 
-export class CreatedNodeDto extends ActionedBaseDto {
+export class GotNodeDto extends ActionedBaseDto {
   @ApiProperty({ example: 1.2 })
   x: number;
 

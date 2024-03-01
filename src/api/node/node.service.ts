@@ -1,11 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import {
+  FlowNotFound,
+  NodeTypeNotFound,
+  DuplicateUniqueNodeException,
+} from './node.exceptions';
 import { Node } from './entities';
 import { NodeRepository } from './node.repository';
-import { CreateNodeDto, CreatedNodeDto } from './dto';
-import { FlowNotFound, NodeTypeNotFound } from './node.exceptions';
+import { CreateNodeDto, CreatedNodeDto, GotNodeDto } from './dto';
 
+import { NodeTypeEnum } from '../node-type/enums';
 import { FlowService } from '../flow/flow.service';
 import { NodeTypeService } from '../node-type/node-type.service';
 
@@ -33,6 +38,16 @@ export class NodeService {
       throw new NodeTypeNotFound();
     }
 
+    const count = await this.nodeRepository.countBy({
+      flow: { id: data.flowId },
+      nodeType: { type: data.type },
+    });
+
+    // Only CUSTOM flow can be created more than one
+    if (count > 0 && data.type !== NodeTypeEnum.CUSTOM) {
+      throw new DuplicateUniqueNodeException();
+    }
+
     const node = this.nodeRepository.create({
       flow,
       nodeType,
@@ -43,6 +58,14 @@ export class NodeService {
 
     await this.nodeRepository.save(node);
 
-    return node;
+    return { ...node, nodeType };
+  }
+
+  public async getAll(): Promise<GotNodeDto[]> {
+    const nodes = await this.nodeRepository.find({
+      relations: { nodeType: true },
+    });
+
+    return nodes;
   }
 }

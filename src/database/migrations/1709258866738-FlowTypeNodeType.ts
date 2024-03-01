@@ -16,6 +16,16 @@ export class FlowTypeNodeType1709258866738 implements MigrationInterface {
             type: 'uuid',
             isPrimary: true,
           },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: `('now'::text)::timestamp(6) with time zone`,
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: `('now'::text)::timestamp(6) with time zone`,
+          },
         ],
       }),
     );

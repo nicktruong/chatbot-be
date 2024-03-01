@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { BotModule } from '@/api/bot/bot.module';
 import { AuthModule } from '@/api/auth/auth.module';
 import { FlowModule } from '@/api/flow/flow.module';
+import { NodeModule } from '@/api/node/node.module';
 import { configuration, EnvSchema } from '@/config';
 import { TokenModule } from '@/api/token/token.module';
 import { AdminModule } from '@/api/admin/admin.module';
@@ -22,6 +23,7 @@ import { FlowTypeModule } from '@/api/flow-type/flow-type.module';
     BotModule,
     AuthModule,
     FlowModule,
+    NodeModule,
     TokenModule,
     AdminModule,
     CustomerModule,
