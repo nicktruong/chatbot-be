@@ -61,8 +61,9 @@ export class NodeService {
     return { ...node, nodeType };
   }
 
-  public async getAll(): Promise<GotNodeDto[]> {
+  public async getAll(flowId: string): Promise<GotNodeDto[]> {
     const nodes = await this.nodeRepository.find({
+      where: { flow: { id: flowId } },
       relations: { nodeType: true },
     });
 

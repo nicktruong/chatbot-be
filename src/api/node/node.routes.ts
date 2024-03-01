@@ -17,7 +17,7 @@ export default {
     },
   },
   getAll: <IRouteParams>{
-    path: '/',
+    path: '/:flowId',
     method: RequestMethod.GET,
     roles: [UserRole.CUSTOMER],
     swaggerInfo: {

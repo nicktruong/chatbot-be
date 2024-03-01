@@ -1,4 +1,4 @@
-import { Body } from '@nestjs/common';
+import { Body, Param } from '@nestjs/common';
 import { InjectController, InjectRoute } from '@/decorators';
 
 import nodeRoutes from './node.routes';
@@ -17,8 +17,8 @@ export class NodeController {
   }
 
   @InjectRoute(nodeRoutes.getAll)
-  public async getAll(): Promise<GotNodeDto[]> {
-    const nodes = await this.nodeService.getAll();
+  public async getAll(@Param('flowId') flowId: string): Promise<GotNodeDto[]> {
+    const nodes = await this.nodeService.getAll(flowId);
 
     return nodes;
   }
