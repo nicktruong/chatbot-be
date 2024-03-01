@@ -6,6 +6,7 @@ import { EnvSchema, configuration } from '@/config';
 
 import { AdminSeedModule } from './admin/admin-seed.module';
 import { FlowTypeSeedModule } from './flow-type/flow-type-seed.module';
+import { NodeTypeSeedModule } from './node-type/node-type-seed.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { FlowTypeSeedModule } from './flow-type/flow-type-seed.module';
     }),
     AdminSeedModule,
     FlowTypeSeedModule,
+    NodeTypeSeedModule,
   ],
 })
 export class SeedModule {}
