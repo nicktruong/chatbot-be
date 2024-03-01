@@ -63,4 +63,15 @@ export class FlowService {
 
     return flows;
   }
+
+  public async getById(id: string): Promise<GotFlowDto> {
+    const flow = await this.flowRepository.findOne({
+      where: { id },
+      relations: {
+        flowType: true,
+      },
+    });
+
+    return flow;
+  }
 }

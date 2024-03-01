@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 import { Bot } from '@/api/bot/entities';
+import { Node } from '@/api/node/entities';
 import { FlowType } from '@/api/flow-type/entities';
 import { Base as BaseEntity } from '@/common/entities';
 
@@ -14,4 +15,7 @@ export class Flow extends BaseEntity {
 
   @ManyToOne(() => FlowType)
   flowType: FlowType;
+
+  @OneToMany(() => Node, (node) => node.flow)
+  nodes: Node[];
 }
