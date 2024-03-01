@@ -1,6 +1,7 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, ManyToMany } from 'typeorm';
 
 import { enumh } from '@/utils/helpers';
+import { FlowType } from '@/api/flow-type/entities';
 import { Base as BaseEntity } from '@/common/entities';
 
 import { NodeTypeEnum } from '../enums';
@@ -22,4 +23,7 @@ export class NodeType extends BaseEntity {
 
   @Column({ name: 'default_y' })
   defaultY: number;
+
+  @ManyToMany(() => FlowType, (flowType) => flowType.nodeTypes)
+  flowTypes: FlowType[];
 }

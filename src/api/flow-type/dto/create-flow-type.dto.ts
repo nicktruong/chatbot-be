@@ -14,7 +14,6 @@ export class CreateFlowTypeDto {
   type: FlowTypeEnum;
 
   @IsString()
-  @IsOptional()
   @IsNotEmpty()
   @ApiProperty({
     example: 'This is the main flow',
