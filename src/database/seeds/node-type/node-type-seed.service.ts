@@ -17,16 +17,16 @@ export class NodeTypeSeedService {
     if (!countNodeType) {
       await this.repository.save(
         this.repository.create({
-          defaultX: 0,
-          defaultY: 0,
+          defaultX: 500,
+          defaultY: 200,
           type: NodeTypeEnum.START,
           desc: 'This is the beginning of a new conversation.',
         }),
       );
       await this.repository.save(
         this.repository.create({
-          defaultX: 200,
-          defaultY: 0,
+          defaultX: 800,
+          defaultY: 200,
           type: NodeTypeEnum.END,
           desc: 'When a user reaches this node, the conversation is ended and the user is redirected to the "Conversation End" workflow.',
         }),

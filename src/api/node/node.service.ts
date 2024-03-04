@@ -67,6 +67,6 @@ export class NodeService {
       relations: { nodeType: true },
     });
 
-    return nodes;
+    return nodes.map((node) => ({ ...node, x: +node.x, y: +node.y }));
   }
 }
