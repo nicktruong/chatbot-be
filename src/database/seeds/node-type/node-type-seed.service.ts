@@ -31,6 +31,22 @@ export class NodeTypeSeedService {
           desc: 'When a user reaches this node, the conversation is ended and the user is redirected to the "Conversation End" workflow.',
         }),
       );
+      await this.repository.save(
+        this.repository.create({
+          defaultX: 500,
+          defaultY: 600,
+          type: NodeTypeEnum.CUSTOM,
+          desc: '',
+        }),
+      );
+      await this.repository.save(
+        this.repository.create({
+          defaultX: 800,
+          defaultY: 600,
+          type: NodeTypeEnum.EVENT,
+          desc: '',
+        }),
+      );
     }
   }
 }

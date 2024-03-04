@@ -52,5 +52,6 @@ export class NodeType1709203475051 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable('node_types');
+    await queryRunner.query('DROP TYPE node_types_type_enum');
   }
 }

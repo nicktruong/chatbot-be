@@ -21,6 +21,18 @@ export class FlowTypeSeedService {
           desc: 'This is the main workflow of your chatbot. It is executed when the user starts a conversation.',
         }),
       );
+      await this.repository.save(
+        this.repository.create({
+          type: FlowTypeEnum.CUSTOM,
+          desc: 'Add variables and edit other workflow properties here.',
+        }),
+      );
+      await this.repository.save(
+        this.repository.create({
+          type: FlowTypeEnum.END,
+          desc: 'This workflow is executed when the last node of the conversation is an "End" node. It could be used, for example, to let the user rate the conversation.',
+        }),
+      );
     }
   }
 }
