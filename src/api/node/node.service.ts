@@ -53,6 +53,7 @@ export class NodeService {
       nodeType,
       x: data.x,
       y: data.y,
+      position: -1,
       name: DEFAULT_NODE_NAME,
     });
 

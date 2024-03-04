@@ -15,6 +15,9 @@ export class Node extends BaseEntity {
   @Column()
   name: string;
 
+  @Column()
+  position: number;
+
   @ManyToOne(() => Flow, (flow) => flow.nodes)
   flow: Flow;
 

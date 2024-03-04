@@ -31,6 +31,10 @@ export class Node1709265450342 implements MigrationInterface {
             type: 'varchar',
           },
           {
+            name: 'position',
+            type: 'int',
+          },
+          {
             name: 'flow_id',
             type: 'uuid',
           },
