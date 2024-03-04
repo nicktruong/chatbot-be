@@ -1,14 +1,22 @@
+import { omit } from 'ramda';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import {
+  GotNodeDto,
+  CreateNodeDto,
+  CreatedNodeDto,
+  ChangePositionDto,
+  ChangedPositionDto,
+} from './dto';
+import {
+  NodeNotFound,
   FlowNotFound,
   NodeTypeNotFound,
   DuplicateUniqueNodeException,
 } from './node.exceptions';
 import { Node } from './entities';
 import { NodeRepository } from './node.repository';
-import { CreateNodeDto, CreatedNodeDto, GotNodeDto } from './dto';
 
 import { NodeTypeEnum } from '../node-type/enums';
 import { FlowService } from '../flow/flow.service';
@@ -59,7 +67,7 @@ export class NodeService {
 
     await this.nodeRepository.save(node);
 
-    return { ...node, nodeType };
+    return omit(['flow'], { ...node, nodeType });
   }
 
   public async getAll(flowId: string): Promise<GotNodeDto[]> {
@@ -68,6 +76,27 @@ export class NodeService {
       relations: { nodeType: true },
     });
 
-    return nodes.map((node) => ({ ...node, x: +node.x, y: +node.y }));
+    return nodes.map((node) =>
+      omit(['flow'], { ...node, x: +node.x, y: +node.y }),
+    );
+  }
+
+  public async changePosition(
+    nodeId: string,
+    data: ChangePositionDto,
+  ): Promise<ChangedPositionDto> {
+    const node = await this.nodeRepository.find({ where: { id: nodeId } });
+
+    if (!node) {
+      throw new NodeNotFound();
+    }
+
+    await this.nodeRepository.update({ id: nodeId }, { x: data.x, y: data.y });
+
+    return {
+      x: data.x,
+      y: data.y,
+      updatedAt: new Date(),
+    };
   }
 }
