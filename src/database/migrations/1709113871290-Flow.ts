@@ -1,9 +1,4 @@
-import {
-  Table,
-  QueryRunner,
-  TableForeignKey,
-  MigrationInterface,
-} from 'typeorm';
+import { Table, QueryRunner, MigrationInterface } from 'typeorm';
 
 export class Flow1709113871290 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -41,25 +36,19 @@ export class Flow1709113871290 implements MigrationInterface {
             default: `('now'::text)::timestamp(6) with time zone`,
           },
         ],
-      }),
-    );
-
-    await queryRunner.createForeignKey(
-      'flows',
-      new TableForeignKey({
-        columnNames: ['bot_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'bots',
-        onDelete: 'CASCADE',
-      }),
-    );
-
-    await queryRunner.createForeignKey(
-      'flows',
-      new TableForeignKey({
-        columnNames: ['flow_type_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'flow_types',
+        foreignKeys: [
+          {
+            columnNames: ['bot_id'],
+            referencedColumnNames: ['id'],
+            referencedTableName: 'bots',
+            onDelete: 'CASCADE',
+          },
+          {
+            columnNames: ['flow_type_id'],
+            referencedColumnNames: ['id'],
+            referencedTableName: 'flow_types',
+          },
+        ],
       }),
     );
   }
