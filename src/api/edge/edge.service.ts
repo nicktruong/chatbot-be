@@ -36,6 +36,8 @@ export class EdgeService {
       (node) => `'${node.id}'::uuid`,
     );
 
+    if (nodeIds.length === 0) return [];
+
     const edges = await this.edgeRepository
       .createQueryBuilder()
       .where(`source_node_id = ANY(ARRAY[${nodeIds}])`)
