@@ -30,6 +30,8 @@ export class BotController {
   ): Promise<CreatedBotDto> {
     const createdBot = await this.botService.create(user.element.id);
 
+    // TODO: Get nodes for default main flow from flow_type_node_type
+    // TODO: If time allows, convert flow_type_node_type to a template table
     // Create one default main flow for this bot
     const flow = await this.flowService.create({
       name: MAIN_FLOW_NAME,
@@ -49,7 +51,7 @@ export class BotController {
       y: defaultStartNode.defaultY,
     });
 
-    // Create default start node for main flow
+    // Create default end node for main flow
     const defaultEndNode = await this.nodeTypeService.findByType(
       NodeTypeEnum.END,
     );

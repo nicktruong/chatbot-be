@@ -12,6 +12,7 @@ import { TokenModule } from '@/api/token/token.module';
 import { AdminModule } from '@/api/admin/admin.module';
 import { DatabaseModule } from '@/database/database.module';
 import { CustomerModule } from '@/api/customer/customer.module';
+import { CardTypeModule } from '@/api/card-type/card-type.module';
 import { FlowTypeModule } from '@/api/flow-type/flow-type.module';
 
 @Module({
@@ -28,6 +29,7 @@ import { FlowTypeModule } from '@/api/flow-type/flow-type.module';
     AdminModule,
     CustomerModule,
     DatabaseModule,
+    CardTypeModule,
     FlowTypeModule,
   ],
   controllers: [AppController],
