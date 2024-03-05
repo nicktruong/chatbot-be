@@ -3,24 +3,45 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Edge } from './entities';
 import { EdgeRepository } from './edge.repository';
-import { CreateEdgeDto, CreatedEdgeDto } from './dto';
+import { CreateEdgeDto, CreatedEdgeDto, GotEdgeDto } from './dto';
+
+import { NodeService } from '../node/node.service';
 
 @Injectable()
 export class EdgeService {
-  constructor(@InjectRepository(Edge) private edgeRepository: EdgeRepository) {}
+  constructor(
+    @InjectRepository(Edge) private edgeRepository: EdgeRepository,
+    private nodeService: NodeService,
+  ) {}
 
   public async create(data: CreateEdgeDto): Promise<CreatedEdgeDto> {
     const createdEdge = this.edgeRepository.create({
-      sourceNode: { id: data.sourceNodeId },
-      targetNode: { id: data.targetNodeId },
+      sourceNodeId: data.sourceNodeId,
+      targetNodeId: data.targetNodeId,
     });
 
-    await this.edgeRepository.save(createdEdge);
+    const { createdAt, updatedAt } = await this.edgeRepository.save(
+      createdEdge,
+    );
 
     return {
       ...data,
-      createdAt: createdEdge.createdAt,
-      updatedAt: createdEdge.updatedAt,
+      createdAt,
+      updatedAt,
     };
+  }
+
+  public async getAll(flowId: string): Promise<GotEdgeDto[]> {
+    const nodeIds = (await this.nodeService.getAll(flowId)).map(
+      (node) => `'${node.id}'::uuid`,
+    );
+
+    const edges = await this.edgeRepository
+      .createQueryBuilder()
+      .where(`source_node_id = ANY(ARRAY[${nodeIds}])`)
+      .orWhere(`target_node_id = ANY(ARRAY[${nodeIds}])`)
+      .getMany();
+
+    return edges;
   }
 }

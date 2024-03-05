@@ -36,11 +36,13 @@ export class Edge1709563161031 implements MigrationInterface {
             columnNames: ['source_node_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'nodes',
+            onDelete: 'CASCADE',
           },
           {
             columnNames: ['target_node_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'nodes',
+            onDelete: 'CASCADE',
           },
         ],
       }),
