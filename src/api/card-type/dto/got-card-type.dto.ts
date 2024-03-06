@@ -1,6 +1,8 @@
-import { ActionedBaseDto } from '@/common/dto';
-import { enumh } from '@/utils/helpers';
 import { ApiProperty } from '@nestjs/swagger';
+
+import { enumh } from '@/utils/helpers';
+import { ActionedBaseDto } from '@/common/dto';
+
 import { CardTypeEnum, GroupTypeEnum } from '../card-type.enum';
 
 export class GotCardTypeDto extends ActionedBaseDto {

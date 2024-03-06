@@ -1,8 +1,9 @@
 import { Column, Entity } from 'typeorm';
 
-import { Base as BaseEntity } from '@/common/entities';
-import { CardTypeEnum, GroupTypeEnum } from '../card-type.enum';
 import { enumh } from '@/utils/helpers';
+import { Base as BaseEntity } from '@/common/entities';
+
+import { CardTypeEnum, GroupTypeEnum } from '../card-type.enum';
 
 @Entity({ name: 'card_types' })
 export class CardType extends BaseEntity {

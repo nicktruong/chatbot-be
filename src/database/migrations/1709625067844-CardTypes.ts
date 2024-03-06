@@ -1,6 +1,7 @@
-import { CardTypeEnum, GroupTypeEnum } from '@/api/card-type/card-type.enum';
-import { enumh } from '@/utils/helpers';
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+
+import { enumh } from '@/utils/helpers';
+import { CardTypeEnum, GroupTypeEnum } from '@/api/card-type/card-type.enum';
 
 export class CardTypes1709625067844 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {

@@ -1,7 +1,8 @@
 import { InjectController, InjectRoute } from '@/decorators';
+
+import { GotCardTypeDto } from './dto';
 import cardTypeRoutes from './card-type.routes';
 import { CardTypeService } from './card-type.service';
-import { GotCardTypeDto } from './dto';
 
 @InjectController({ name: cardTypeRoutes.index })
 export class CardTypeController {

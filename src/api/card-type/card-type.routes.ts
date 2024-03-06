@@ -1,6 +1,8 @@
+import { HttpStatus, RequestMethod } from '@nestjs/common';
+
 import { UserRole } from '@/common/enums';
 import { IRouteParams } from '@/decorators';
-import { HttpStatus, RequestMethod } from '@nestjs/common';
+
 import { GotCardTypeDto } from './dto/got-card-type.dto';
 
 export default {
