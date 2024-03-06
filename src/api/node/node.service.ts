@@ -61,6 +61,7 @@ export class NodeService {
       nodeType,
       x: data.x,
       y: data.y,
+      id: data.id,
       position: -1,
       name: DEFAULT_NODE_NAME,
     });
@@ -73,7 +74,7 @@ export class NodeService {
   public async getAll(flowId: string): Promise<GotNodeDto[]> {
     const nodes = await this.nodeRepository.find({
       where: { flow: { id: flowId } },
-      relations: { nodeType: true, cards: true },
+      relations: { nodeType: true, cards: { cardType: true } },
     });
 
     return nodes.map((node) =>
