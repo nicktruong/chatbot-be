@@ -1,9 +1,10 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 import { enumh } from '@/utils/helpers';
 import { Base as BaseEntity } from '@/common/entities';
 
 import { CardTypeEnum, GroupTypeEnum } from '../card-type.enum';
+import { CardTypeFieldType } from '@/api/card-type-field-type/entities';
 
 @Entity({ name: 'card_types' })
 export class CardType extends BaseEntity {
@@ -27,4 +28,10 @@ export class CardType extends BaseEntity {
     default: enumh.getFirstKey<typeof GroupTypeEnum>(GroupTypeEnum),
   })
   groupType: GroupTypeEnum;
+
+  @OneToMany(
+    () => CardTypeFieldType,
+    (cardTypeFieldType) => cardTypeFieldType.cardType,
+  )
+  cardTypesFieldTypes: CardTypeFieldType[];
 }
