@@ -12,9 +12,9 @@ import { CardTypeFieldTypeRepository } from '@/api/card-type-field-type/card-typ
 export class CardTypeFieldTypeSeedService {
   constructor(
     @InjectRepository(CardTypeFieldType)
+    private repository: CardTypeFieldTypeRepository,
     private cardTypeService: CardTypeService,
     private fieldTypeService: FieldTypeService,
-    private repository: CardTypeFieldTypeRepository,
   ) {}
 
   async seedExpressionCardFields() {
