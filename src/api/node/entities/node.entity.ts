@@ -1,5 +1,6 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
+import { Card } from '@/api/card/entities';
 import { Flow } from '@/api/flow/entities';
 import { NodeType } from '@/api/node-type/entities';
 import { Base as BaseEntity } from '@/common/entities';
@@ -24,4 +25,7 @@ export class Node extends BaseEntity {
   @ManyToOne(() => NodeType)
   @JoinColumn({ name: 'node_type_id' })
   nodeType: NodeType;
+
+  @OneToMany(() => Card, (card) => card.node)
+  cards: Card[];
 }
