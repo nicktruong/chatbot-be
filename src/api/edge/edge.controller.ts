@@ -19,15 +19,10 @@ export class EdgeController {
     return createdEdge;
   }
 
-  @InjectRoute(edgeRoutes.getAll)
-  public async getAll(@Param('flowId') flowId: string): Promise<GotEdgeDto[]> {
-    const edges = await this.edgeService.getAll(flowId);
-
-    return edges;
-  }
-
   @InjectRoute(edgeRoutes.getByCardId)
-  public async getByCardId(@Param('cardId') cardId: string) {
+  public async getByCardId(
+    @Param('cardId') cardId: string,
+  ): Promise<GotEdgeDto> {
     const edge = await this.edgeService.getByCardId(cardId);
 
     return edge;

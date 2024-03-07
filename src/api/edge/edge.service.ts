@@ -18,6 +18,8 @@ export class EdgeService {
     if (!data.cardId) {
       await this.edgeRepository.delete({
         sourceNodeId: data.sourceNodeId,
+      });
+      await this.edgeRepository.delete({
         targetNodeId: data.targetNodeId,
       });
     } else {
@@ -41,27 +43,26 @@ export class EdgeService {
     };
   }
 
-  public async getAll(flowId: string): Promise<GotEdgeDto[]> {
-    const nodeIds = (await this.nodeService.getAll(flowId)).map(
-      (node) => `'${node.id}'::uuid`,
-    );
-
-    if (nodeIds.length === 0) return [];
-
-    const edges = await this.edgeRepository
-      .createQueryBuilder()
-      .where(`source_node_id = ANY(ARRAY[${nodeIds}])`)
-      .orWhere(`target_node_id = ANY(ARRAY[${nodeIds}])`)
-      .getMany();
-
-    return edges;
-  }
-
   public async getByCardId(cardId: string): Promise<GotEdgeDto> {
-    const edge = await this.edgeRepository.findOneBy({
-      card: { id: cardId },
-    });
+    const [type, id] = cardId.replace('-', '/').split('/');
 
-    return edge;
+    if (type === 'card') {
+      const edge = await this.edgeRepository.findOne({
+        where: { card: { id } },
+        relations: { card: true },
+      });
+
+      // TODO: Refactor project
+      return { ...edge, cardId: edge.card.id };
+    }
+
+    if (type === 'node') {
+      const edge = await this.edgeRepository.findOne({
+        where: [{ sourceNodeId: id }, { targetNodeId: id }],
+        relations: { card: true },
+      });
+
+      return { ...edge, cardId: '' };
+    }
   }
 }
