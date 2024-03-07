@@ -1,5 +1,6 @@
 import {
   Entity,
+  OneToOne,
   ManyToOne,
   JoinColumn,
   CreateDateColumn,
@@ -7,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { Card } from '@/api/card/entities';
 import { Node } from '@/api/node/entities';
 
 @Entity({ name: 'edges' })
@@ -24,6 +26,10 @@ export class Edge {
   @ManyToOne(() => Node, (node) => node.targetNodeToEdge)
   @JoinColumn({ name: 'target_node_id' })
   targetNode: Node;
+
+  @OneToOne(() => Card)
+  @JoinColumn({ name: 'card_id' })
+  card: Card;
 
   @CreateDateColumn({
     name: 'created_at',

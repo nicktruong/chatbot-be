@@ -16,6 +16,7 @@ export class EdgeService {
 
   public async create(data: CreateEdgeDto): Promise<CreatedEdgeDto> {
     const createdEdge = this.edgeRepository.create({
+      card: { id: data.cardId },
       sourceNodeId: data.sourceNodeId,
       targetNodeId: data.targetNodeId,
     });
@@ -45,5 +46,13 @@ export class EdgeService {
       .getMany();
 
     return edges;
+  }
+
+  public async getByCardId(cardId: string): Promise<GotEdgeDto> {
+    const edge = await this.edgeRepository.findOneBy({
+      card: { id: cardId },
+    });
+
+    return edge;
   }
 }

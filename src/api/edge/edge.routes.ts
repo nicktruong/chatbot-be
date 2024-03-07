@@ -24,4 +24,12 @@ export default {
       responses: [{ status: HttpStatus.OK, type: GotEdgeDto }],
     },
   },
+  getByCardId: <IRouteParams>{
+    path: '/:cardId',
+    method: RequestMethod.GET,
+    roles: [UserRole.CUSTOMER],
+    swaggerInfo: {
+      responses: [{ status: HttpStatus.OK, type: GotEdgeDto }],
+    },
+  },
 };

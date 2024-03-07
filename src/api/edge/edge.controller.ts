@@ -23,4 +23,11 @@ export class EdgeController {
 
     return edges;
   }
+
+  @InjectRoute(edgeRoutes.getByCardId)
+  public async getByCardId(@Param('cardId') cardId: string) {
+    const edge = await this.edgeService.getByCardId(cardId);
+
+    return edge;
+  }
 }

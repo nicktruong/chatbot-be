@@ -7,18 +7,24 @@ export class Edge1709563161031 implements MigrationInterface {
         name: 'edges',
         columns: [
           {
-            name: 'source_node_id',
+            name: 'id',
             type: 'uuid',
             isPrimary: true,
             generationStrategy: 'uuid',
             default: 'uuid_generate_v4()',
           },
           {
+            name: 'card_id',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'source_node_id',
+            type: 'uuid',
+          },
+          {
             name: 'target_node_id',
             type: 'uuid',
-            isPrimary: true,
-            generationStrategy: 'uuid',
-            default: 'uuid_generate_v4()',
           },
           {
             name: 'created_at',
@@ -32,6 +38,12 @@ export class Edge1709563161031 implements MigrationInterface {
           },
         ],
         foreignKeys: [
+          {
+            columnNames: ['card_id'],
+            referencedColumnNames: ['id'],
+            referencedTableName: 'cards',
+            onDelete: 'CASCADE',
+          },
           {
             columnNames: ['source_node_id'],
             referencedColumnNames: ['id'],
