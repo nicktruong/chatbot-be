@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { GotCardDto } from '@/api/card/dto';
 import { ActionedBaseDto } from '@/common/dto';
 import { GotNodeTypeDto } from '@/api/node-type/dto';
 
@@ -16,7 +15,4 @@ export class GotNodeDto extends ActionedBaseDto {
 
   @ApiProperty()
   nodeType: GotNodeTypeDto;
-
-  @ApiProperty()
-  cards: GotCardDto[];
 }

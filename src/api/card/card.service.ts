@@ -32,6 +32,7 @@ export class CardService {
   public async getAll(nodeId: string): Promise<GotCardDto[]> {
     const cards = await this.cardRepository.find({
       where: { node: { id: nodeId } },
+      relations: { cardType: true },
     });
 
     return cards.map((card) => ({
