@@ -7,9 +7,8 @@ import { CreatedEdgeDto, GotEdgeDto } from './dto';
 
 export default {
   index: 'edges',
-  create: <IRouteParams>{
+  createOrUpdate: <IRouteParams>{
     path: '/',
-    code: HttpStatus.CREATED,
     method: RequestMethod.POST,
     roles: [UserRole.CUSTOMER],
     swaggerInfo: {

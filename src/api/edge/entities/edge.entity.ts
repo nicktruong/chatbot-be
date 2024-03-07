@@ -3,16 +3,15 @@ import {
   OneToOne,
   ManyToOne,
   JoinColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { Card } from '@/api/card/entities';
 import { Node } from '@/api/node/entities';
+import { Base as BaseEntity } from '@/common/entities';
 
 @Entity({ name: 'edges' })
-export class Edge {
+export class Edge extends BaseEntity {
   @PrimaryGeneratedColumn('uuid', { name: 'source_node_id' })
   sourceNodeId: string;
 
@@ -30,21 +29,4 @@ export class Edge {
   @OneToOne(() => Card)
   @JoinColumn({ name: 'card_id' })
   card: Card;
-
-  @CreateDateColumn({
-    name: 'created_at',
-    type: 'timestamptz',
-    nullable: false,
-    default: () => 'CURRENT_TIMESTAMP(6)',
-  })
-  createdAt: Date;
-
-  @UpdateDateColumn({
-    name: 'updated_at',
-    type: 'timestamptz',
-    nullable: false,
-    default: () => 'CURRENT_TIMESTAMP(6)',
-    onUpdate: 'CURRENT_TIMESTAMP(6)',
-  })
-  updatedAt: Date;
 }

@@ -1,6 +1,6 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { Table, QueryRunner, TableUnique, MigrationInterface } from 'typeorm';
 
-export class Edge1709563161031 implements MigrationInterface {
+export class Edge1709708130023 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -57,6 +57,13 @@ export class Edge1709563161031 implements MigrationInterface {
             onDelete: 'CASCADE',
           },
         ],
+      }),
+    );
+
+    await queryRunner.createUniqueConstraint(
+      'edges',
+      new TableUnique({
+        columnNames: ['card_id', 'source_node_id', 'target_node_id'],
       }),
     );
   }

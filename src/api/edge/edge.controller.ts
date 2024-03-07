@@ -10,9 +10,11 @@ import { CreateEdgeDto, CreatedEdgeDto, GotEdgeDto } from './dto';
 export class EdgeController {
   constructor(private edgeService: EdgeService) {}
 
-  @InjectRoute(edgeRoutes.create)
-  public async createOne(@Body() data: CreateEdgeDto): Promise<CreatedEdgeDto> {
-    const createdEdge = await this.edgeService.create(data);
+  @InjectRoute(edgeRoutes.createOrUpdate)
+  public async createOrUpdate(
+    @Body() data: CreateEdgeDto,
+  ): Promise<CreatedEdgeDto> {
+    const createdEdge = await this.edgeService.createOrUpdate(data);
 
     return createdEdge;
   }

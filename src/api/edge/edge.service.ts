@@ -14,7 +14,16 @@ export class EdgeService {
     private nodeService: NodeService,
   ) {}
 
-  public async create(data: CreateEdgeDto): Promise<CreatedEdgeDto> {
+  public async createOrUpdate(data: CreateEdgeDto): Promise<CreatedEdgeDto> {
+    if (!data.cardId) {
+      await this.edgeRepository.delete({
+        sourceNodeId: data.sourceNodeId,
+        targetNodeId: data.targetNodeId,
+      });
+    } else {
+      await this.edgeRepository.delete({ card: { id: data.cardId } });
+    }
+
     const createdEdge = this.edgeRepository.create({
       card: { id: data.cardId },
       sourceNodeId: data.sourceNodeId,
