@@ -36,6 +36,20 @@ export class Card1709708129776 implements MigrationInterface {
             default: `('now'::text)::timestamp(6) with time zone`,
           },
         ],
+        foreignKeys: [
+          {
+            columnNames: ['node_id'],
+            referencedColumnNames: ['id'],
+            referencedTableName: 'nodes',
+            onDelete: 'CASCADE',
+          },
+          {
+            columnNames: ['card_type_id'],
+            referencedColumnNames: ['id'],
+            referencedTableName: 'card_types',
+            onDelete: 'CASCADE',
+          },
+        ],
       }),
     );
   }
