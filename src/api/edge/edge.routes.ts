@@ -15,8 +15,8 @@ export default {
       responses: [{ status: HttpStatus.CREATED, type: CreatedEdgeDto }],
     },
   },
-  getByCardId: <IRouteParams>{
-    path: '/:cardId',
+  getByCardOrNodeId: <IRouteParams>{
+    path: '/:id',
     method: RequestMethod.GET,
     roles: [UserRole.CUSTOMER],
     swaggerInfo: {

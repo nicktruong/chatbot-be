@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Edge } from './entities';
 import { EdgeRepository } from './edge.repository';
-import { CreateEdgeDto, CreatedEdgeDto, GotEdgeDto } from './dto';
+import { CreateEdgeDto, CreatedEdgeDto } from './dto';
 
 import { NodeService } from '../node/node.service';
 
@@ -43,26 +43,20 @@ export class EdgeService {
     };
   }
 
-  public async getByCardId(cardId: string): Promise<GotEdgeDto> {
-    const [type, id] = cardId.replace('-', '/').split('/');
+  public async getByCardOrNodeId(
+    id: string,
+    type: 'card' | 'node',
+  ): Promise<Edge> {
+    const condition =
+      type === 'card'
+        ? { card: { id } }
+        : [{ sourceNodeId: id }, { targetNodeId: id }];
 
-    if (type === 'card') {
-      const edge = await this.edgeRepository.findOne({
-        where: { card: { id } },
-        relations: { card: true },
-      });
+    const edge = await this.edgeRepository.findOne({
+      where: condition,
+      relations: { card: true },
+    });
 
-      // TODO: Refactor project
-      return { ...edge, cardId: edge.card.id };
-    }
-
-    if (type === 'node') {
-      const edge = await this.edgeRepository.findOne({
-        where: [{ sourceNodeId: id }, { targetNodeId: id }],
-        relations: { card: true },
-      });
-
-      return { ...edge, cardId: '' };
-    }
+    return edge;
   }
 }

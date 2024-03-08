@@ -1,10 +1,11 @@
-import { Body, Param } from '@nestjs/common';
+import { Body, Param, Query } from '@nestjs/common';
 
 import { InjectController, InjectRoute } from '@/decorators';
 
+import { Edge } from './entities';
 import edgeRoutes from './edge.routes';
 import { EdgeService } from './edge.service';
-import { CreateEdgeDto, CreatedEdgeDto, GotEdgeDto } from './dto';
+import { CreateEdgeDto, CreatedEdgeDto } from './dto';
 
 @InjectController({ name: edgeRoutes.index })
 export class EdgeController {
@@ -19,11 +20,12 @@ export class EdgeController {
     return createdEdge;
   }
 
-  @InjectRoute(edgeRoutes.getByCardId)
-  public async getByCardId(
-    @Param('cardId') cardId: string,
-  ): Promise<GotEdgeDto> {
-    const edge = await this.edgeService.getByCardId(cardId);
+  @InjectRoute(edgeRoutes.getByCardOrNodeId)
+  public async getByCardOrNodeId(
+    @Param('id') id: string,
+    @Query('type') type: 'card' | 'node',
+  ): Promise<Edge> {
+    const edge = await this.edgeService.getByCardOrNodeId(id, type);
 
     return edge;
   }
