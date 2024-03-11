@@ -120,22 +120,22 @@ export class Timestamptz1708683289496 implements MigrationInterface {
         newColumn: new TableColumn({
           name: 'created_at',
           type: 'timestamp',
+          default: `('now'::text)::timestamp(6) with time zone`,
         }),
         oldColumn: new TableColumn({
           name: 'created_at',
           type: 'timestamptz',
-          default: `('now'::text)::timestamp(6) with time zone`,
         }),
       },
       {
         newColumn: new TableColumn({
           name: 'updated_at',
           type: 'timestamp',
+          default: `('now'::text)::timestamp(6) with time zone`,
         }),
         oldColumn: new TableColumn({
           name: 'updated_at',
           type: 'timestamptz',
-          default: `('now'::text)::timestamp(6) with time zone`,
         }),
       },
     ]);

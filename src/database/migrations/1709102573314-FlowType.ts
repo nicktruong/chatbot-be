@@ -1,10 +1,13 @@
-import { Table, QueryRunner, MigrationInterface } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class Admin1663056203776 implements MigrationInterface {
+import { enumh } from '@/utils/helpers';
+import { FlowTypeEnum } from '@/api/flow-type/enums';
+
+export class FlowType1709102573314 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'admins',
+        name: 'flow_types',
         columns: [
           {
             name: 'id',
@@ -14,16 +17,15 @@ export class Admin1663056203776 implements MigrationInterface {
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'email',
-            type: 'varchar',
+            name: 'type',
+            type: 'enum',
             isUnique: true,
+            enum: enumh.getValuesAndToString<typeof FlowTypeEnum>(FlowTypeEnum),
+            enumName: 'flow_types_type_enum',
+            default: `'MAIN'::flow_types_type_enum`,
           },
           {
-            name: 'password',
-            type: 'varchar',
-          },
-          {
-            name: 'name',
+            name: 'desc',
             type: 'varchar',
           },
           {
@@ -43,6 +45,6 @@ export class Admin1663056203776 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('admins');
+    await queryRunner.dropTable('flow_types');
   }
 }

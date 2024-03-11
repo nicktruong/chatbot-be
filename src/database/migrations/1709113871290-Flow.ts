@@ -1,10 +1,15 @@
-import { Table, QueryRunner, MigrationInterface } from 'typeorm';
+import {
+  Table,
+  QueryRunner,
+  TableForeignKey,
+  MigrationInterface,
+} from 'typeorm';
 
-export class Admin1663056203776 implements MigrationInterface {
+export class Flow1709113871290 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'admins',
+        name: 'flows',
         columns: [
           {
             name: 'id',
@@ -14,17 +19,16 @@ export class Admin1663056203776 implements MigrationInterface {
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'email',
-            type: 'varchar',
-            isUnique: true,
-          },
-          {
-            name: 'password',
-            type: 'varchar',
-          },
-          {
             name: 'name',
             type: 'varchar',
+          },
+          {
+            name: 'bot_id',
+            type: 'uuid',
+          },
+          {
+            name: 'flow_type_id',
+            type: 'uuid',
           },
           {
             name: 'created_at',
@@ -38,11 +42,29 @@ export class Admin1663056203776 implements MigrationInterface {
           },
         ],
       }),
-      true,
+    );
+
+    await queryRunner.createForeignKey(
+      'flows',
+      new TableForeignKey({
+        columnNames: ['bot_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'bots',
+        onDelete: 'CASCADE',
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      'flows',
+      new TableForeignKey({
+        columnNames: ['flow_type_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'flow_types',
+      }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('admins');
+    await queryRunner.dropTable('flows');
   }
 }

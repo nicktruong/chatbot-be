@@ -1,6 +1,13 @@
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+
 import { Time } from '@/utils/constants';
 
 export const config = {
+  admin: {
+    name: process.env.ADMIN_NAME || 'admin',
+    email: process.env.ADMIN_EMAIL || 'admin@example.com',
+    password: process.env.ADMIN_PASSWORD || 'admin123',
+  },
   db: {
     type: process.env.DB_TYPE || 'postgres',
     host: process.env.DB_HOST || 'localhost',
@@ -15,6 +22,8 @@ export const config = {
     logging: false,
     synchronize: false,
     autoLoadEntities: true,
+
+    namingStrategy: new SnakeNamingStrategy(),
   },
   jwt: {
     secret: process.env.JWT_SECRET,
