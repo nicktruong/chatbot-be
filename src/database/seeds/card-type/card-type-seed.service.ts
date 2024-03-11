@@ -20,6 +20,12 @@ export class CardTypeSeedService {
       type: CardTypeEnum.NUMBER,
       groupType: GroupTypeEnum.CAPTURE_INFO,
     },
+    {
+      desc: '',
+      name: 'Text',
+      type: CardTypeEnum.TEXT,
+      groupType: GroupTypeEnum.SEND_MESSAGES,
+    },
   ];
 
   constructor(
