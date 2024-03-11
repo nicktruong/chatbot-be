@@ -33,6 +33,7 @@ export class CardService {
     const cards = await this.cardRepository.find({
       where: { node: { id: nodeId } },
       relations: { cardType: true },
+      order: { position: 'ASC' },
     });
 
     return cards.map((card) => ({

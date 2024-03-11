@@ -1,4 +1,6 @@
 export enum FieldTypeEnum {
   LABEL = 'LABEL',
+  QUESTION = 'QUESTION',
   CONDITION = 'CONDITION',
+  STORE_RESULT_IN = 'STORE_RESULT_IN',
 }
