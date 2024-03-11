@@ -41,7 +41,7 @@ export class CardService {
 
     await this.cardRepository.save(createdCard);
 
-    return { ...omit(['node', 'cardType'], createdCard), cardTypeId, nodeId };
+    return createdCard;
   }
 
   public async getAll(nodeId: string): Promise<GotCardDto[]> {
