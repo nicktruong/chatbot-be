@@ -25,6 +25,10 @@ export class CardTypeFieldTypeSeedService {
         { type: FieldTypeEnum.STORE_RESULT_IN, position: 1 },
       ],
     },
+    {
+      cardType: CardTypeEnum.TEXT,
+      fieldTypes: [{ type: FieldTypeEnum.MESSAGE_TO_SEND, position: 0 }],
+    },
   ];
 
   constructor(

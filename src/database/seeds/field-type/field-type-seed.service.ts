@@ -24,6 +24,10 @@ export class FieldTypeSeedService {
       question: 'Store result in',
       type: FieldTypeEnum.STORE_RESULT_IN,
     },
+    {
+      question: 'Message to send',
+      type: FieldTypeEnum.MESSAGE_TO_SEND,
+    },
   ];
 
   constructor(
