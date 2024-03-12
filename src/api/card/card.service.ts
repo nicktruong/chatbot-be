@@ -1,19 +1,15 @@
-import { omit } from 'ramda';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Card } from './entities';
+import { CreateCardDto } from './dto';
 import { CardRepository } from './card.repository';
-import { GotCardDto, CreateCardDto, CreatedCardDto } from './dto';
 
 @Injectable()
 export class CardService {
   constructor(@InjectRepository(Card) private cardRepository: CardRepository) {}
 
-  public async create({
-    nodeId,
-    cardTypeId,
-  }: CreateCardDto): Promise<CreatedCardDto> {
+  public async create({ nodeId, cardTypeId }: CreateCardDto): Promise<Card> {
     const count = await this.cardRepository.count({
       where: { node: { id: nodeId } },
     });
@@ -24,22 +20,18 @@ export class CardService {
       cardType: { id: cardTypeId },
     });
 
-    const result = await this.cardRepository.save(createdCard);
+    await this.cardRepository.save(createdCard);
 
-    return { ...omit(['node', 'cardType'], result), cardTypeId, nodeId };
+    return createdCard;
   }
 
-  public async getAll(nodeId: string): Promise<GotCardDto[]> {
+  public async getAll(nodeId: string): Promise<Card[]> {
     const cards = await this.cardRepository.find({
       where: { node: { id: nodeId } },
       relations: { cardType: true },
       order: { position: 'ASC' },
     });
 
-    return cards.map((card) => ({
-      ...card,
-      nodeId,
-      cardTypeId: card.cardType.id,
-    }));
+    return cards;
   }
 }

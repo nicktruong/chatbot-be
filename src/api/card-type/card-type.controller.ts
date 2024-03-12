@@ -1,6 +1,6 @@
 import { InjectController, InjectRoute } from '@/decorators';
 
-import { GotCardTypeDto } from './dto';
+import { CardType } from './entities';
 import cardTypeRoutes from './card-type.routes';
 import { CardTypeService } from './card-type.service';
 
@@ -9,7 +9,7 @@ export class CardTypeController {
   constructor(private cardTypeService: CardTypeService) {}
 
   @InjectRoute(cardTypeRoutes.getAll)
-  public async getAll(): Promise<GotCardTypeDto[]> {
+  public async getAll(): Promise<CardType[]> {
     const cardTypes = await this.cardTypeService.getAll();
 
     return cardTypes;

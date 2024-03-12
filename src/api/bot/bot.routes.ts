@@ -1,10 +1,9 @@
 import { HttpStatus, RequestMethod } from '@nestjs/common';
 
 import { UserRole } from '@/common/enums';
-
-import { GotBotDto, CreatedBotDto } from './dto';
-
 import type { IRouteParams } from '@/decorators';
+
+import { Bot } from './entities';
 
 export default {
   index: 'bots',
@@ -14,7 +13,7 @@ export default {
     method: RequestMethod.POST,
     roles: [UserRole.CUSTOMER],
     swaggerInfo: {
-      responses: [{ status: HttpStatus.CREATED, type: CreatedBotDto }],
+      responses: [{ status: HttpStatus.CREATED, type: Bot }],
     },
   },
   getAll: <IRouteParams>{
@@ -22,7 +21,7 @@ export default {
     method: RequestMethod.GET,
     roles: [UserRole.CUSTOMER],
     swaggerInfo: {
-      responses: [{ status: HttpStatus.OK, type: GotBotDto, isArray: true }],
+      responses: [{ status: HttpStatus.OK, type: Bot, isArray: true }],
     },
   },
   deleteById: <IRouteParams>{

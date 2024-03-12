@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Column, Entity, OneToMany } from 'typeorm';
 
 import { enumh } from '@/utils/helpers';
@@ -18,6 +19,7 @@ export class FieldType extends BaseEntity {
   @Column()
   question: string;
 
+  @Exclude()
   @OneToMany(
     () => CardTypeFieldType,
     (cardTypeFieldType) => cardTypeFieldType.fieldType,

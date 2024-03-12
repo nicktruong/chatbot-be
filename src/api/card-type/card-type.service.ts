@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { CardType } from './entities';
-import { GotCardTypeDto } from './dto';
 import { CardTypeEnum } from './card-type.enum';
 import { CardTypeRepository } from './card-type.repository';
 
@@ -12,13 +11,13 @@ export class CardTypeService {
     @InjectRepository(CardType) private cardTypeRepository: CardTypeRepository,
   ) {}
 
-  public async getAll(): Promise<GotCardTypeDto[]> {
+  public async getAll(): Promise<CardType[]> {
     const cardTypes = await this.cardTypeRepository.find();
 
     return cardTypes;
   }
 
-  public async getByType(type: CardTypeEnum): Promise<GotCardTypeDto> {
+  public async getByType(type: CardTypeEnum): Promise<CardType> {
     const cardType = await this.cardTypeRepository.findOneBy({ type });
 
     return cardType;
