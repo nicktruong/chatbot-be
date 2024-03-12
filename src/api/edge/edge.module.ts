@@ -5,10 +5,8 @@ import { Edge } from './entities';
 import { EdgeService } from './edge.service';
 import { EdgeController } from './edge.controller';
 
-import { NodeModule } from '../node/node.module';
-
 @Module({
-  imports: [NodeModule, TypeOrmModule.forFeature([Edge])],
+  imports: [TypeOrmModule.forFeature([Edge])],
   controllers: [EdgeController],
   providers: [EdgeService],
   exports: [EdgeService],

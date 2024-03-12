@@ -2,9 +2,10 @@ import { Body, Param } from '@nestjs/common';
 
 import { InjectController, InjectRoute, ReqUser } from '@/decorators';
 
+import { Flow } from './entities';
+import { CreateFlowDto } from './dto';
 import flowRoutes from './flow.routes';
 import { FlowService } from './flow.service';
-import { CreateFlowDto, CreatedFlowDto, GotFlowDto } from './dto';
 
 import { ILocalStrategy } from '../auth/strategies';
 
@@ -13,7 +14,7 @@ export class FlowController {
   constructor(private readonly flowService: FlowService) {}
 
   @InjectRoute(flowRoutes.create)
-  public async createOne(@Body() data: CreateFlowDto): Promise<CreatedFlowDto> {
+  public async createOne(@Body() data: CreateFlowDto): Promise<Flow> {
     const createdBot = await this.flowService.create(data);
     return createdBot;
   }
@@ -22,7 +23,7 @@ export class FlowController {
   public async getAll(
     @ReqUser() user: ILocalStrategy,
     @Param('botId') botId: string,
-  ): Promise<GotFlowDto[]> {
+  ): Promise<Flow[]> {
     const createdBot = await this.flowService.getAll(user.element.id, botId);
     return createdBot;
   }

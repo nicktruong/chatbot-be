@@ -3,7 +3,7 @@ import { HttpStatus, RequestMethod } from '@nestjs/common';
 import { UserRole } from '@/common/enums';
 import { IRouteParams } from '@/decorators';
 
-import { GotCardTypeDto } from './dto/got-card-type.dto';
+import { CardType } from './entities';
 
 export default {
   index: 'card-types',
@@ -12,9 +12,7 @@ export default {
     method: RequestMethod.GET,
     roles: [UserRole.CUSTOMER],
     swaggerInfo: {
-      responses: [
-        { status: HttpStatus.OK, type: GotCardTypeDto, isArray: true },
-      ],
+      responses: [{ status: HttpStatus.OK, type: CardType, isArray: true }],
     },
   },
 };

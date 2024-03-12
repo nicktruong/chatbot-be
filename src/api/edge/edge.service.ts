@@ -3,48 +3,40 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Type } from './enums';
 import { Edge } from './entities';
+import { CreateEdgeDto } from './dto';
 import { EdgeRepository } from './edge.repository';
-import { CreateEdgeDto, CreatedEdgeDto } from './dto';
-
-import { NodeService } from '../node/node.service';
 
 @Injectable()
 export class EdgeService {
-  constructor(
-    @InjectRepository(Edge) private edgeRepository: EdgeRepository,
-    private nodeService: NodeService,
-  ) {}
+  constructor(@InjectRepository(Edge) private edgeRepository: EdgeRepository) {}
 
-  public async createOrUpdate(data: CreateEdgeDto): Promise<CreatedEdgeDto> {
-    await this.edgeRepository.delete({
-      targetNodeId: data.targetNodeId,
+  public async createOrUpdate({
+    cardId,
+    sourceNodeId,
+    targetNodeId,
+  }: CreateEdgeDto): Promise<Edge> {
+    // Remove edges beforing creating new edges to prevent:
+    // - one card | node can link to multiple targets
+    // - multiple cards link to one target
+    const edges = await this.edgeRepository.find({
+      where: [
+        { targetNodeId },
+        !cardId && { sourceNodeId },
+        cardId && { card: { id: cardId } },
+      ],
     });
-    if (!data.cardId) {
-      await this.edgeRepository.delete({
-        sourceNodeId: data.sourceNodeId,
-      });
-      await this.edgeRepository.delete({
-        targetNodeId: data.targetNodeId,
-      });
-    } else {
-      await this.edgeRepository.delete({ card: { id: data.cardId } });
-    }
+
+    await this.edgeRepository.remove(edges);
 
     const createdEdge = this.edgeRepository.create({
-      card: { id: data.cardId },
-      sourceNodeId: data.sourceNodeId,
-      targetNodeId: data.targetNodeId,
+      card: { id: cardId },
+      sourceNodeId: sourceNodeId,
+      targetNodeId: targetNodeId,
     });
 
-    const { createdAt, updatedAt } = await this.edgeRepository.save(
-      createdEdge,
-    );
+    await this.edgeRepository.save(createdEdge);
 
-    return {
-      ...data,
-      createdAt,
-      updatedAt,
-    };
+    return createdEdge;
   }
 
   public async getByCardOrNodeId(id: string, type: Type): Promise<Edge> {

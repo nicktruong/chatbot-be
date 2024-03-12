@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 import { Flow } from '@/api/flow/entities';
@@ -19,6 +20,7 @@ export class Bot extends BaseEntity {
   })
   publishDate: Date;
 
+  @Exclude()
   @OneToMany(() => Flow, (flow) => flow.bot)
   flows: Flow[];
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { CreateCardDto } from './dto';
 import { CardTypeFieldType } from './entities';
 import { CardTypeFieldTypeRepository } from './card-type-field-type.repository';
 
@@ -15,11 +16,7 @@ export class CardTypeFieldTypeService {
     position,
     cardTypeId,
     fieldTypeId,
-  }: {
-    position: number;
-    cardTypeId: string;
-    fieldTypeId: string;
-  }) {
+  }: CreateCardDto): Promise<CardTypeFieldType> {
     const createdDependency = this.cardTypeFieldTypeRepository.create({
       position,
       cardType: { id: cardTypeId },

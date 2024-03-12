@@ -3,7 +3,7 @@ import { HttpStatus, RequestMethod } from '@nestjs/common';
 import { UserRole } from '@/common/enums';
 import { IRouteParams } from '@/decorators';
 
-import { CreatedCardDto, GotCardDto } from './dto';
+import { Card } from './entities';
 
 export default {
   index: 'cards',
@@ -13,7 +13,7 @@ export default {
     method: RequestMethod.POST,
     roles: [UserRole.CUSTOMER],
     swaggerInfo: {
-      responses: [{ status: HttpStatus.CREATED, type: CreatedCardDto }],
+      responses: [{ status: HttpStatus.CREATED, type: Card }],
     },
   },
   getAll: <IRouteParams>{
@@ -21,7 +21,7 @@ export default {
     method: RequestMethod.GET,
     roles: [UserRole.CUSTOMER],
     swaggerInfo: {
-      responses: [{ status: HttpStatus.OK, type: GotCardDto, isArray: true }],
+      responses: [{ status: HttpStatus.OK, type: Card, isArray: true }],
     },
   },
 };

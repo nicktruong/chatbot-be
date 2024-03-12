@@ -9,7 +9,6 @@ import { Bot } from './entities';
 import { BotRepository } from './bot.repository';
 
 import type { DeleteResult } from 'typeorm';
-import type { GotBotDto, CreatedBotDto } from './dto';
 
 @Injectable()
 export class BotService {
@@ -18,7 +17,7 @@ export class BotService {
     private botRepository: BotRepository,
   ) {}
 
-  public async create(userId: string): Promise<CreatedBotDto> {
+  public async create(userId: string): Promise<Bot> {
     const createdBot = this.botRepository.create({
       creator: { id: userId },
       name: name.generateRandomName(),
@@ -26,10 +25,10 @@ export class BotService {
 
     await this.botRepository.save(createdBot);
 
-    return omit(['creator'], createdBot);
+    return createdBot;
   }
 
-  public async getAll(userId: string): Promise<GotBotDto[]> {
+  public async getAll(userId: string): Promise<Bot[]> {
     const bots = await this.botRepository.findBy({ creator: { id: userId } });
 
     return bots;

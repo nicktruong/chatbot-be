@@ -1,15 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-import { enumh } from '@/utils/helpers';
-
 import { NodeTypeEnum } from '../enums';
 
 export class CreateNodeTypeDto {
   @IsEnum(NodeTypeEnum)
   @ApiProperty({
     enum: NodeTypeEnum,
-    default: enumh.getFirstKey<typeof NodeTypeEnum>(NodeTypeEnum),
   })
   type: NodeTypeEnum;
 

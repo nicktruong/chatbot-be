@@ -3,7 +3,7 @@ import { HttpStatus, RequestMethod } from '@nestjs/common';
 import { UserRole } from '@/common/enums';
 import { IRouteParams } from '@/decorators';
 
-import { CreatedEdgeDto, GotEdgeDto } from './dto';
+import { Edge } from './entities';
 
 export default {
   index: 'edges',
@@ -12,7 +12,7 @@ export default {
     method: RequestMethod.POST,
     roles: [UserRole.CUSTOMER],
     swaggerInfo: {
-      responses: [{ status: HttpStatus.CREATED, type: CreatedEdgeDto }],
+      responses: [{ status: HttpStatus.CREATED, type: Edge }],
     },
   },
   getByCardOrNodeId: <IRouteParams>{
@@ -20,7 +20,7 @@ export default {
     method: RequestMethod.GET,
     roles: [UserRole.CUSTOMER],
     swaggerInfo: {
-      responses: [{ status: HttpStatus.OK, type: GotEdgeDto }],
+      responses: [{ status: HttpStatus.OK, type: Edge }],
     },
   },
 };
