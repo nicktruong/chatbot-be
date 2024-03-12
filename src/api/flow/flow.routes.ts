@@ -3,7 +3,7 @@ import { HttpStatus, RequestMethod } from '@nestjs/common';
 import { UserRole } from '@/common/enums';
 import type { IRouteParams } from '@/decorators';
 
-import { CreatedFlowDto, GotFlowDto } from './dto';
+import { Flow } from './entities';
 
 export default {
   index: 'flows',
@@ -13,7 +13,7 @@ export default {
     method: RequestMethod.POST,
     roles: [UserRole.CUSTOMER],
     swaggerInfo: {
-      responses: [{ status: HttpStatus.CREATED, type: CreatedFlowDto }],
+      responses: [{ status: HttpStatus.CREATED, type: Flow }],
     },
   },
   getAll: <IRouteParams>{
@@ -21,7 +21,7 @@ export default {
     method: RequestMethod.GET,
     roles: [UserRole.CUSTOMER],
     swaggerInfo: {
-      responses: [{ status: HttpStatus.OK, type: GotFlowDto, isArray: true }],
+      responses: [{ status: HttpStatus.OK, type: Flow, isArray: true }],
     },
   },
 };

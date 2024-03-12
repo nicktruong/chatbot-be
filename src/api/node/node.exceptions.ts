@@ -20,6 +20,6 @@ export class NodeTypeNotFound extends NotFoundException {
 
 export class DuplicateUniqueNodeException extends BadRequestException {
   constructor() {
-    super('This node can only be created one.');
+    super('This node can only be created once.');
   }
 }

@@ -4,18 +4,16 @@ import { InjectController, InjectRoute } from '@/decorators';
 
 import { Type } from './enums';
 import { Edge } from './entities';
+import { CreateEdgeDto } from './dto';
 import edgeRoutes from './edge.routes';
 import { EdgeService } from './edge.service';
-import { CreateEdgeDto, CreatedEdgeDto } from './dto';
 
 @InjectController({ name: edgeRoutes.index })
 export class EdgeController {
   constructor(private edgeService: EdgeService) {}
 
   @InjectRoute(edgeRoutes.createOrUpdate)
-  public async createOrUpdate(
-    @Body() data: CreateEdgeDto,
-  ): Promise<CreatedEdgeDto> {
+  public async createOrUpdate(@Body() data: CreateEdgeDto): Promise<Edge> {
     const createdEdge = await this.edgeService.createOrUpdate(data);
 
     return createdEdge;

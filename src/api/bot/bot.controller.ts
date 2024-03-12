@@ -2,9 +2,9 @@ import { Param } from '@nestjs/common';
 
 import { InjectController, InjectRoute, ReqUser } from '@/decorators';
 
+import { Bot } from './entities';
 import botRoutes from './bot.routes';
 import { BotService } from './bot.service';
-import { GotBotDto, CreatedBotDto } from './dto';
 
 import { FlowTypeEnum } from '../flow-type/enums';
 import { NodeTypeEnum } from '../node-type/enums';
@@ -25,9 +25,7 @@ export class BotController {
   ) {}
 
   @InjectRoute(botRoutes.create)
-  public async createOne(
-    @ReqUser() user: ILocalStrategy,
-  ): Promise<CreatedBotDto> {
+  public async createOne(@ReqUser() user: ILocalStrategy): Promise<Bot> {
     const createdBot = await this.botService.create(user.element.id);
 
     // TODO: Get nodes for default main flow from flow_type_node_type
@@ -55,7 +53,7 @@ export class BotController {
   }
 
   @InjectRoute(botRoutes.getAll)
-  public async getAll(@ReqUser() user: ILocalStrategy): Promise<GotBotDto[]> {
+  public async getAll(@ReqUser() user: ILocalStrategy): Promise<Bot[]> {
     const gotBots = await this.botService.getAll(user.element.id);
 
     return gotBots;

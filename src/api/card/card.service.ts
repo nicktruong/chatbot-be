@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 
 import { Card } from './entities';
+import { CreateCardDto } from './dto';
 import { CardRepository } from './card.repository';
-import { GotCardDto, CreateCardDto, CreatedCardDto } from './dto';
 
 import { FieldService } from '../field/field.service';
 
@@ -20,10 +20,7 @@ export class CardService {
     return this.cardRepository.exists({ where: { id } });
   }
 
-  public async create({
-    nodeId,
-    cardTypeId,
-  }: CreateCardDto): Promise<CreatedCardDto> {
+  public async create({ nodeId, cardTypeId }: CreateCardDto): Promise<Card> {
     const count = await this.cardRepository.count({
       where: { node: { id: nodeId } },
     });
@@ -44,17 +41,13 @@ export class CardService {
     return createdCard;
   }
 
-  public async getAll(nodeId: string): Promise<GotCardDto[]> {
+  public async getAll(nodeId: string): Promise<Card[]> {
     const cards = await this.cardRepository.find({
       where: { node: { id: nodeId } },
       relations: { cardType: true },
       order: { position: 'ASC' },
     });
 
-    return cards.map((card) => ({
-      ...card,
-      nodeId,
-      cardTypeId: card.cardType.id,
-    }));
+    return cards;
   }
 }

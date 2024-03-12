@@ -2,23 +2,24 @@ import { Body, Param } from '@nestjs/common';
 
 import { InjectController, InjectRoute } from '@/decorators';
 
+import { Card } from './entities';
+import { CreateCardDto } from './dto';
 import cardRoutes from './card.routes';
 import { CardService } from './card.service';
-import { CreateCardDto, CreatedCardDto, GotCardDto } from './dto';
 
 @InjectController({ name: cardRoutes.index })
 export class CardController {
   constructor(private cardService: CardService) {}
 
   @InjectRoute(cardRoutes.create)
-  public async createOne(@Body() data: CreateCardDto): Promise<CreatedCardDto> {
+  public async createOne(@Body() data: CreateCardDto): Promise<Card> {
     const createdCard = await this.cardService.create(data);
 
     return createdCard;
   }
 
   @InjectRoute(cardRoutes.getAll)
-  public async getAll(@Param('nodeId') nodeId: string): Promise<GotCardDto[]> {
+  public async getAll(@Param('nodeId') nodeId: string): Promise<Card[]> {
     const cards = await this.cardService.getAll(nodeId);
 
     return cards;

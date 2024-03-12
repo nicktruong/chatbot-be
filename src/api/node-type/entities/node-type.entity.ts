@@ -1,6 +1,6 @@
+import { Exclude } from 'class-transformer';
 import { Column, Entity, ManyToMany } from 'typeorm';
 
-import { enumh } from '@/utils/helpers';
 import { FlowType } from '@/api/flow-type/entities';
 import { Base as BaseEntity } from '@/common/entities';
 
@@ -11,7 +11,6 @@ export class NodeType extends BaseEntity {
   @Column({
     type: 'enum',
     enum: NodeTypeEnum,
-    default: enumh.getFirstKey<typeof NodeTypeEnum>(NodeTypeEnum),
   })
   type: NodeTypeEnum;
 
@@ -24,6 +23,7 @@ export class NodeType extends BaseEntity {
   @Column({ name: 'default_y' })
   defaultY: number;
 
+  @Exclude()
   @ManyToMany(() => FlowType, (flowType) => flowType.nodeTypes)
   flowTypes: FlowType[];
 }

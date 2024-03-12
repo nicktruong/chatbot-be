@@ -1,3 +1,4 @@
+import { Exclude, Expose } from 'class-transformer';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { Card } from '@/api/card/entities';
@@ -9,6 +10,12 @@ export class Field extends BaseEntity {
   @Column()
   value: string;
 
+  @Expose()
+  get cardId(): string {
+    return this.card?.id;
+  }
+
+  @Exclude()
   @ManyToOne(() => Card)
   @JoinColumn({ name: 'card_id' })
   card: Card;

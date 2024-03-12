@@ -1,11 +1,10 @@
-import { omit } from 'ramda';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Flow } from './entities';
+import { CreateFlowDto } from './dto';
 import { FlowRepository } from './flow.repository';
 import { DuplicateUniqueFlowException } from './flow.exceptions';
-import { CreateFlowDto, CreatedFlowDto, GotFlowDto } from './dto';
 
 import { FlowTypeEnum } from '../flow-type/enums';
 import { FlowTypeService } from '../flow-type/flow-type.service';
@@ -22,7 +21,7 @@ export class FlowService {
     private flowTypeService: FlowTypeService,
   ) {}
 
-  public async create(data: CreateFlowDto): Promise<CreatedFlowDto> {
+  public async create(data: CreateFlowDto): Promise<Flow> {
     const flowType = await this.flowTypeService.getByType({
       type: data.flowType,
     });
@@ -40,14 +39,14 @@ export class FlowService {
     const flow = this.flowRepository.create({
       bot: { id: data.botId },
       flowType: { id: flowType.id },
-      name: data.name ?? DEFAULT_FLOW_NAME,
+      name: data.name ?? `${DEFAULT_FLOW_NAME} ${count + 1}`,
     });
     await this.flowRepository.save(flow);
 
-    return omit(['bot'], { ...flow, flowType });
+    return flow;
   }
 
-  public async getAll(userId: string, botId: string): Promise<GotFlowDto[]> {
+  public async getAll(userId: string, botId: string): Promise<Flow[]> {
     const flows = await this.flowRepository.find({
       where: {
         bot: {
@@ -65,7 +64,7 @@ export class FlowService {
     return flows;
   }
 
-  public async getById(id: string): Promise<GotFlowDto> {
+  public async getById(id: string): Promise<Flow> {
     const flow = await this.flowRepository.findOne({
       where: { id },
       relations: {

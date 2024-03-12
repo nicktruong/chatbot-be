@@ -3,7 +3,8 @@ import { HttpStatus, RequestMethod } from '@nestjs/common';
 import { UserRole } from '@/common/enums';
 import { IRouteParams } from '@/decorators';
 
-import { GotNodeDto, CreatedNodeDto, ChangedPositionDto } from './dto';
+import { Node } from './entities';
+import { ChangedPositionDto } from './dto';
 
 export default {
   index: 'nodes',
@@ -13,7 +14,7 @@ export default {
     method: RequestMethod.POST,
     roles: [UserRole.CUSTOMER],
     swaggerInfo: {
-      responses: [{ status: HttpStatus.CREATED, type: CreatedNodeDto }],
+      responses: [{ status: HttpStatus.CREATED, type: Node }],
     },
   },
   getAll: <IRouteParams>{
@@ -21,7 +22,7 @@ export default {
     method: RequestMethod.GET,
     roles: [UserRole.CUSTOMER],
     swaggerInfo: {
-      responses: [{ status: HttpStatus.OK, type: GotNodeDto, isArray: true }],
+      responses: [{ status: HttpStatus.OK, type: Node, isArray: true }],
     },
   },
   changePosition: <IRouteParams>{
