@@ -25,7 +25,7 @@ export default {
     },
   },
   changePosition: <IRouteParams>{
-    path: '/change-position/:nodeId',
+    path: '/:nodeId/position',
     method: RequestMethod.PUT,
     roles: [UserRole.CUSTOMER],
     swaggerInfo: {
