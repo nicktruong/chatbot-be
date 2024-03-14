@@ -6,9 +6,16 @@ import { BotService } from './bot.service';
 import { BotController } from './bot.controller';
 
 import { FlowModule } from '../flow/flow.module';
+import { NodeModule } from '../node/node.module';
+import { NodeTypeModule } from '../node-type/node-type.module';
 
 @Module({
-  imports: [FlowModule, TypeOrmModule.forFeature([Bot])],
+  imports: [
+    FlowModule,
+    NodeModule,
+    NodeTypeModule,
+    TypeOrmModule.forFeature([Bot]),
+  ],
   controllers: [BotController],
   providers: [BotService],
   exports: [BotService],

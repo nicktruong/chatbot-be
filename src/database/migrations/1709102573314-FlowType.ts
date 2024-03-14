@@ -46,5 +46,6 @@ export class FlowType1709102573314 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable('flow_types');
+    await queryRunner.query('DROP TYPE flow_types_type_enum');
   }
 }

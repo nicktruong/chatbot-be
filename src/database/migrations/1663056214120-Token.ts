@@ -55,5 +55,6 @@ export class Token1663056214120 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable('tokens');
+    await queryRunner.query('DROP TYPE customer_user_role_enum');
   }
 }
