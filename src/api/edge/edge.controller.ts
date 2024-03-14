@@ -2,6 +2,7 @@ import { Body, Param, Query } from '@nestjs/common';
 
 import { InjectController, InjectRoute } from '@/decorators';
 
+import { Type } from './enums';
 import { Edge } from './entities';
 import edgeRoutes from './edge.routes';
 import { EdgeService } from './edge.service';
@@ -23,7 +24,7 @@ export class EdgeController {
   @InjectRoute(edgeRoutes.getByCardOrNodeId)
   public async getByCardOrNodeId(
     @Param('id') id: string,
-    @Query('type') type: 'card' | 'node',
+    @Query('type') type: Type,
   ): Promise<Edge> {
     const edge = await this.edgeService.getByCardOrNodeId(id, type);
 
