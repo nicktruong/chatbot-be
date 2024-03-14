@@ -6,11 +6,7 @@ import { Message } from './message.entity';
 
 @Entity({ name: 'schedules' })
 export class Schedule extends BaseEntity {
-  @OneToOne(() => Message)
-  @JoinColumn({ name: 'message_id' })
-  message: Message;
-
-  @Column({ name: 'is_sent' })
+  @Column({ name: 'is_sent', default: false })
   isSent: boolean;
 
   @Column({
@@ -18,4 +14,8 @@ export class Schedule extends BaseEntity {
     type: 'timestamptz',
   })
   scheduledDate: Date;
+
+  @OneToOne(() => Message)
+  @JoinColumn({ name: 'message_id' })
+  message: Message;
 }

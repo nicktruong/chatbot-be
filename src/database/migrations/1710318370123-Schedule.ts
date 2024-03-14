@@ -20,6 +20,7 @@ export class Schedule1710318370123 implements MigrationInterface {
           {
             name: 'is_sent',
             type: 'boolean',
+            default: false,
           },
           {
             name: 'scheduled_date',

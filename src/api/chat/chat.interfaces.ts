@@ -1,6 +1,6 @@
 import type { IWsValidatorExceptionResponse } from '@/filters';
 
-import { Message } from './entities';
+import { Message } from '../message/entities';
 import { SendMessageDto } from './dto';
 
 export interface ClientToServerEvents {
