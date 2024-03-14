@@ -12,7 +12,14 @@ export class ChatService {
   ) {}
 
   public async createMessage(data: SendMessageDto): Promise<Message> {
-    const chat = this.messageRepository.create(data);
+    const { value, sender, receiver, botId } = data;
+
+    const chat = this.messageRepository.create({
+      value,
+      sender,
+      receiver,
+      bot: { id: botId },
+    });
 
     await this.messageRepository.save(chat);
 
