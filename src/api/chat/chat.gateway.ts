@@ -29,6 +29,7 @@ export class ChatGateway {
 
   @SubscribeMessage('message')
   async handleMessage(client: any, payload: SendMessageDto): Promise<string> {
+    await this.chatService.createMessage(payload);
     return 'Hello world!';
   }
 }
