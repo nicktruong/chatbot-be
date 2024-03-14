@@ -23,13 +23,13 @@ export class CreateNodeDto {
   @ApiProperty({
     example: 1.2,
   })
-  x: number;
+  x?: number;
 
   @IsNumber()
   @ApiProperty({
     example: 2.2,
   })
-  y: number;
+  y?: number;
 
   @IsUUID()
   @ApiProperty({

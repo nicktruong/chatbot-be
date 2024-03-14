@@ -40,27 +40,15 @@ export class BotController {
     });
 
     // Create default start node for main flow
-    const defaultStartNode = await this.nodeTypeService.findByType(
-      NodeTypeEnum.START,
-    );
-
     await this.nodeService.create({
       flowId: flow.id,
       type: NodeTypeEnum.START,
-      x: defaultStartNode.defaultX,
-      y: defaultStartNode.defaultY,
     });
 
     // Create default end node for main flow
-    const defaultEndNode = await this.nodeTypeService.findByType(
-      NodeTypeEnum.END,
-    );
-
     await this.nodeService.create({
       flowId: flow.id,
       type: NodeTypeEnum.END,
-      x: defaultEndNode.defaultX,
-      y: defaultEndNode.defaultY,
     });
 
     return createdBot;

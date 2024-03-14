@@ -56,6 +56,13 @@ export class NodeService {
       throw new DuplicateUniqueNodeException();
     }
 
+    const defaultNode = await this.nodeTypeService.findByType(data.type);
+
+    if (defaultNode) {
+      data.x ??= defaultNode.defaultX;
+      data.y ??= defaultNode.defaultY;
+    }
+
     const node = this.nodeRepository.create({
       flow,
       nodeType,
