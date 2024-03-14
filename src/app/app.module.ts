@@ -14,6 +14,7 @@ import { configuration, EnvSchema } from '@/config';
 import { TokenModule } from '@/api/token/token.module';
 import { AdminModule } from '@/api/admin/admin.module';
 import { DatabaseModule } from '@/database/database.module';
+import { MessageModule } from '@/api/message/message.module';
 import { CustomerModule } from '@/api/customer/customer.module';
 import { CardTypeModule } from '@/api/card-type/card-type.module';
 import { FlowTypeModule } from '@/api/flow-type/flow-type.module';
@@ -33,6 +34,7 @@ import { FlowTypeModule } from '@/api/flow-type/flow-type.module';
     ChatModule,
     TokenModule,
     AdminModule,
+    MessageModule,
     CustomerModule,
     DatabaseModule,
     CardTypeModule,
