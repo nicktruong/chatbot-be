@@ -1,10 +1,10 @@
-import { Table, QueryRunner, MigrationInterface } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class Flow1709113871290 implements MigrationInterface {
+export class CardTypeFieldType1709698734131 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'flows',
+        name: 'card_types_field_types',
         columns: [
           {
             name: 'id',
@@ -14,15 +14,15 @@ export class Flow1709113871290 implements MigrationInterface {
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'name',
-            type: 'varchar',
+            name: 'position',
+            type: 'int',
           },
           {
-            name: 'bot_id',
+            name: 'card_type_id',
             type: 'uuid',
           },
           {
-            name: 'flow_type_id',
+            name: 'field_type_id',
             type: 'uuid',
           },
           {
@@ -38,15 +38,16 @@ export class Flow1709113871290 implements MigrationInterface {
         ],
         foreignKeys: [
           {
-            columnNames: ['bot_id'],
+            columnNames: ['card_type_id'],
             referencedColumnNames: ['id'],
-            referencedTableName: 'bots',
+            referencedTableName: 'card_types',
             onDelete: 'CASCADE',
           },
           {
-            columnNames: ['flow_type_id'],
+            columnNames: ['field_type_id'],
             referencedColumnNames: ['id'],
-            referencedTableName: 'flow_types',
+            referencedTableName: 'field_types',
+            onDelete: 'CASCADE',
           },
         ],
       }),
@@ -54,6 +55,6 @@ export class Flow1709113871290 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('flows');
+    await queryRunner.dropTable('card_types_field_types');
   }
 }

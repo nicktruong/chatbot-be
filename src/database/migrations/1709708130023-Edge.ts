@@ -1,10 +1,10 @@
-import { Table, QueryRunner, MigrationInterface } from 'typeorm';
+import { Table, QueryRunner, TableUnique, MigrationInterface } from 'typeorm';
 
-export class Flow1709113871290 implements MigrationInterface {
+export class Edge1709708130023 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'flows',
+        name: 'edges',
         columns: [
           {
             name: 'id',
@@ -14,15 +14,16 @@ export class Flow1709113871290 implements MigrationInterface {
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'name',
-            type: 'varchar',
+            name: 'card_id',
+            type: 'uuid',
+            isNullable: true,
           },
           {
-            name: 'bot_id',
+            name: 'source_node_id',
             type: 'uuid',
           },
           {
-            name: 'flow_type_id',
+            name: 'target_node_id',
             type: 'uuid',
           },
           {
@@ -38,22 +39,36 @@ export class Flow1709113871290 implements MigrationInterface {
         ],
         foreignKeys: [
           {
-            columnNames: ['bot_id'],
+            columnNames: ['card_id'],
             referencedColumnNames: ['id'],
-            referencedTableName: 'bots',
+            referencedTableName: 'cards',
             onDelete: 'CASCADE',
           },
           {
-            columnNames: ['flow_type_id'],
+            columnNames: ['source_node_id'],
             referencedColumnNames: ['id'],
-            referencedTableName: 'flow_types',
+            referencedTableName: 'nodes',
+            onDelete: 'CASCADE',
+          },
+          {
+            columnNames: ['target_node_id'],
+            referencedColumnNames: ['id'],
+            referencedTableName: 'nodes',
+            onDelete: 'CASCADE',
           },
         ],
+      }),
+    );
+
+    await queryRunner.createUniqueConstraint(
+      'edges',
+      new TableUnique({
+        columnNames: ['card_id', 'source_node_id', 'target_node_id'],
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('flows');
+    await queryRunner.dropTable('edges');
   }
 }

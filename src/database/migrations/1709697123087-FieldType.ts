@@ -1,10 +1,13 @@
-import { Table, QueryRunner, MigrationInterface } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class Flow1709113871290 implements MigrationInterface {
+import { enumh } from '@/utils/helpers';
+import { FieldTypeEnum } from '@/api/field-type/field-type.enum';
+
+export class FieldType1709697123087 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'flows',
+        name: 'field_types',
         columns: [
           {
             name: 'id',
@@ -14,16 +17,17 @@ export class Flow1709113871290 implements MigrationInterface {
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'name',
+            name: 'type',
+            type: 'enum',
+            isUnique: true,
+            enum: enumh.getValuesAndToString<typeof FieldTypeEnum>(
+              FieldTypeEnum,
+            ),
+            enumName: 'field_types_type_enum',
+          },
+          {
+            name: 'question',
             type: 'varchar',
-          },
-          {
-            name: 'bot_id',
-            type: 'uuid',
-          },
-          {
-            name: 'flow_type_id',
-            type: 'uuid',
           },
           {
             name: 'created_at',
@@ -36,24 +40,12 @@ export class Flow1709113871290 implements MigrationInterface {
             default: `('now'::text)::timestamp(6) with time zone`,
           },
         ],
-        foreignKeys: [
-          {
-            columnNames: ['bot_id'],
-            referencedColumnNames: ['id'],
-            referencedTableName: 'bots',
-            onDelete: 'CASCADE',
-          },
-          {
-            columnNames: ['flow_type_id'],
-            referencedColumnNames: ['id'],
-            referencedTableName: 'flow_types',
-          },
-        ],
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('flows');
+    await queryRunner.dropTable('field_types');
+    await queryRunner.query('DROP TYPE field_types_type_enum');
   }
 }

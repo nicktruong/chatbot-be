@@ -1,10 +1,13 @@
-import { Table, QueryRunner, MigrationInterface } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class Flow1709113871290 implements MigrationInterface {
+import { enumh } from '@/utils/helpers';
+import { CardTypeEnum, GroupTypeEnum } from '@/api/card-type/card-type.enum';
+
+export class CardTypes1709625067844 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'flows',
+        name: 'card_types',
         columns: [
           {
             name: 'id',
@@ -14,16 +17,27 @@ export class Flow1709113871290 implements MigrationInterface {
             default: 'uuid_generate_v4()',
           },
           {
+            name: 'type',
+            type: 'enum',
+            isUnique: true,
+            enum: enumh.getValuesAndToString<typeof CardTypeEnum>(CardTypeEnum),
+            enumName: 'card_types_type_enum',
+          },
+          {
             name: 'name',
             type: 'varchar',
           },
           {
-            name: 'bot_id',
-            type: 'uuid',
+            name: 'desc',
+            type: 'varchar',
           },
           {
-            name: 'flow_type_id',
-            type: 'uuid',
+            name: 'group_type',
+            type: 'enum',
+            enum: enumh.getValuesAndToString<typeof GroupTypeEnum>(
+              GroupTypeEnum,
+            ),
+            enumName: 'card_types_group_type_enum',
           },
           {
             name: 'created_at',
@@ -36,24 +50,11 @@ export class Flow1709113871290 implements MigrationInterface {
             default: `('now'::text)::timestamp(6) with time zone`,
           },
         ],
-        foreignKeys: [
-          {
-            columnNames: ['bot_id'],
-            referencedColumnNames: ['id'],
-            referencedTableName: 'bots',
-            onDelete: 'CASCADE',
-          },
-          {
-            columnNames: ['flow_type_id'],
-            referencedColumnNames: ['id'],
-            referencedTableName: 'flow_types',
-          },
-        ],
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('flows');
+    await queryRunner.dropTable('card_types');
   }
 }
