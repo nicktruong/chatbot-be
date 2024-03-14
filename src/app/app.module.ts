@@ -9,6 +9,7 @@ import { CardModule } from '@/api/card/card.module';
 import { EdgeModule } from '@/api/edge/edge.module';
 import { FlowModule } from '@/api/flow/flow.module';
 import { NodeModule } from '@/api/node/node.module';
+import { ChatModule } from '@/api/chat/chat.module';
 import { configuration, EnvSchema } from '@/config';
 import { TokenModule } from '@/api/token/token.module';
 import { AdminModule } from '@/api/admin/admin.module';
@@ -29,6 +30,7 @@ import { FlowTypeModule } from '@/api/flow-type/flow-type.module';
     EdgeModule,
     FlowModule,
     NodeModule,
+    ChatModule,
     TokenModule,
     AdminModule,
     CustomerModule,
