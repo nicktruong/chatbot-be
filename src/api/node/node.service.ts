@@ -61,7 +61,8 @@ export class NodeService {
       nodeType,
       x: data.x,
       y: data.y,
-      position: -1,
+      id: data.id,
+      position: -1, // TODO: Change position
       name: DEFAULT_NODE_NAME,
     });
 
