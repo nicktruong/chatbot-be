@@ -26,7 +26,6 @@
     "seed:run": "ts-node -r tsconfig-paths/register ./src/database/seeds/run-seed.ts"
   },
   "dependencies": {
-    "@golevelup/ts-jest": "^0.4.0",
     "@joaomoreno/unique-names-generator": "^5.1.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
@@ -35,14 +34,15 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/platform-socket.io": "^9.0.0",
     "@nestjs/swagger": "^6.0.5",
     "@nestjs/typeorm": "^9.0.0",
+    "@nestjs/websockets": "^9.0.0",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
-    "date-fns": "^2.29.1",
     "helmet": "^5.1.1",
     "joi": "^17.6.0",
     "passport": "^0.6.0",
@@ -53,10 +53,12 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
+    "socket.io": "^4.7.4",
     "typeorm": "^0.3.7",
     "typeorm-naming-strategies": "^4.1.0"
   },
   "devDependencies": {
+    "@golevelup/ts-jest": "^0.4.0",
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
