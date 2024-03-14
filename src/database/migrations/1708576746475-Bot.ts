@@ -1,9 +1,4 @@
-import {
-  Table,
-  QueryRunner,
-  TableForeignKey,
-  MigrationInterface,
-} from 'typeorm';
+import { Table, QueryRunner, MigrationInterface } from 'typeorm';
 
 export class Bot1708576746475 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -42,17 +37,15 @@ export class Bot1708576746475 implements MigrationInterface {
             default: `('now'::text)::timestamp(6) with time zone`,
           },
         ],
+        foreignKeys: [
+          {
+            columnNames: ['creator_id'],
+            referencedColumnNames: ['id'],
+            referencedTableName: 'customers',
+          },
+        ],
       }),
       true,
-    );
-
-    await queryRunner.createForeignKey(
-      'bots',
-      new TableForeignKey({
-        columnNames: ['creator_id'],
-        referencedTableName: 'customers',
-        referencedColumnNames: ['id'],
-      }),
     );
   }
 

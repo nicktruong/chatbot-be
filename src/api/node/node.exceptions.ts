@@ -1,5 +1,11 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 
+export class NodeNotFound extends NotFoundException {
+  constructor() {
+    super('Node not found.');
+  }
+}
+
 export class FlowNotFound extends NotFoundException {
   constructor() {
     super('Flow not found.');
