@@ -23,17 +23,17 @@ export class Bot1708576746475 implements MigrationInterface {
           },
           {
             name: 'publish_date',
-            type: 'timestamp',
+            type: 'timestamptz',
             isNullable: true,
           },
           {
             name: 'created_at',
-            type: 'timestamp',
+            type: 'timestamptz',
             default: `('now'::text)::timestamp(6) with time zone`,
           },
           {
             name: 'updated_at',
-            type: 'timestamp',
+            type: 'timestamptz',
             default: `('now'::text)::timestamp(6) with time zone`,
           },
         ],

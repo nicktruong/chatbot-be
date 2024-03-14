@@ -31,12 +31,12 @@ export class FieldType1709697123087 implements MigrationInterface {
           },
           {
             name: 'created_at',
-            type: 'timestamp',
+            type: 'timestamptz',
             default: `('now'::text)::timestamp(6) with time zone`,
           },
           {
             name: 'updated_at',
-            type: 'timestamp',
+            type: 'timestamptz',
             default: `('now'::text)::timestamp(6) with time zone`,
           },
         ],
