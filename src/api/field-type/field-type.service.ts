@@ -18,4 +18,14 @@ export class FieldTypeService {
 
     return fieldType;
   }
+
+  public async findByCardTypeId(
+    cardTypeId: string,
+  ): Promise<GotFieldTypeDto[]> {
+    const fieldTypes = await this.fieldTypeRepository.find({
+      where: { cardTypesFieldTypes: { cardType: { id: cardTypeId } } },
+    });
+
+    return fieldTypes;
+  }
 }
