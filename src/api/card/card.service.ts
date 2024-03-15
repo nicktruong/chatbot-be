@@ -6,9 +6,14 @@ import { Card } from './entities';
 import { CardRepository } from './card.repository';
 import { GotCardDto, CreateCardDto, CreatedCardDto } from './dto';
 
+import { FieldService } from '../field/field.service';
+
 @Injectable()
 export class CardService {
-  constructor(@InjectRepository(Card) private cardRepository: CardRepository) {}
+  constructor(
+    @InjectRepository(Card) private cardRepository: CardRepository,
+    private fieldService: FieldService,
+  ) {}
 
   public async create({
     nodeId,
@@ -24,9 +29,14 @@ export class CardService {
       cardType: { id: cardTypeId },
     });
 
-    const result = await this.cardRepository.save(createdCard);
+    await this.fieldService.createDefaults({
+      cardId: createdCard.id,
+      cardTypeId: cardTypeId,
+    });
 
-    return { ...omit(['node', 'cardType'], result), cardTypeId, nodeId };
+    await this.cardRepository.save(createdCard);
+
+    return { ...omit(['node', 'cardType'], createdCard), cardTypeId, nodeId };
   }
 
   public async getAll(nodeId: string): Promise<GotCardDto[]> {

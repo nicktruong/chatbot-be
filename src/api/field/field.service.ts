@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Field } from './entities';
-import { CreateFieldDto, UpdateFieldDto, UpdatedFieldDto } from './dto';
 import { FieldRepository } from './field.repository';
+import { UpdateFieldDto, CreateDefaultsDto } from './dto';
 
 import { FieldTypeService } from '../field-type/field-type.service';
 
@@ -17,10 +17,7 @@ export class FieldService {
   public async createDefaults({
     cardId,
     cardTypeId,
-  }: {
-    cardId: string;
-    cardTypeId: string;
-  }): Promise<void> {
+  }: CreateDefaultsDto): Promise<void> {
     const fieldTypes = await this.fieldTypeService.findByCardTypeId(cardTypeId);
 
     await Promise.all(
@@ -28,40 +25,21 @@ export class FieldService {
         this.fieldRepository.save(
           this.fieldRepository.create({
             value: '',
-            cardId,
-            fieldTypeId: fieldType.id,
+            card: { id: cardId },
+            fieldType: { id: fieldType.id },
           }),
         ),
       ),
     );
   }
 
-  public async create(data: CreateFieldDto): Promise<Field> {
-    const fieldType = await this.fieldTypeService.getByType(data.fieldType);
-
-    const createdField = this.fieldRepository.create({
-      value: data.value,
-      cardId: data.cardId,
-      fieldTypeId: fieldType.id,
-    });
-
-    const result = await this.fieldRepository.save(createdField);
-
-    return result;
-  }
-
-  public async update(data: UpdateFieldDto): Promise<UpdatedFieldDto> {
-    await this.fieldRepository.update(
-      { id: data.fieldId },
-      { value: data.value },
-    );
-
-    return data;
+  public async update(fieldId: string, data: UpdateFieldDto): Promise<void> {
+    await this.fieldRepository.update({ id: fieldId }, { value: data.value });
   }
 
   public async getCardFields(cardId: string): Promise<Field[]> {
     const fields = await this.fieldRepository.find({
-      where: { cardId },
+      where: { card: { id: cardId } },
       relations: { fieldType: true },
       order: { fieldType: { cardTypesFieldTypes: { position: 'ASC' } } },
     });

@@ -1,3 +1,2 @@
-export * from './CreateFieldDto';
-export * from './UpdateFieldDto';
-export * from './UpdatedFieldDto';
+export * from './update-field.dto';
+export * from './create-defaults.dto';

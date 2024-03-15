@@ -3,16 +3,15 @@ import { IRouteParams } from '@/decorators';
 import { HttpStatus, RequestMethod } from '@nestjs/common';
 
 import { Field } from './entities';
-import { UpdatedFieldDto } from './dto';
 
 export default {
   index: 'fields',
   update: <IRouteParams>{
-    path: '/',
+    path: '/:fieldId',
     method: RequestMethod.PUT,
     roles: [UserRole.CUSTOMER],
     swaggerInfo: {
-      responses: [{ status: HttpStatus.OK, type: UpdatedFieldDto }],
+      responses: [{ status: HttpStatus.OK }],
     },
   },
   getCardFields: <IRouteParams>{

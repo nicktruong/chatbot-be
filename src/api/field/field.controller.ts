@@ -2,9 +2,9 @@ import { Body, Param } from '@nestjs/common';
 import { InjectController, InjectRoute } from '@/decorators';
 
 import { Field } from './entities';
+import { UpdateFieldDto } from './dto';
 import fieldRoutes from './field.routes';
 import { FieldService } from './field.service';
-import { UpdateFieldDto, UpdatedFieldDto } from './dto';
 
 @InjectController({ name: fieldRoutes.index })
 export class FieldController {
@@ -20,9 +20,10 @@ export class FieldController {
   }
 
   @InjectRoute(fieldRoutes.update)
-  public async update(@Body() data: UpdateFieldDto): Promise<UpdatedFieldDto> {
-    const updatedField = await this.fieldService.update(data);
-
-    return updatedField;
+  public async update(
+    @Param('fieldId') fieldId: string,
+    @Body() data: UpdateFieldDto,
+  ): Promise<void> {
+    await this.fieldService.update(fieldId, data);
   }
 }
