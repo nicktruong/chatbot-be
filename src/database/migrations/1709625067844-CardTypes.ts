@@ -56,5 +56,9 @@ export class CardTypes1709625067844 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable('card_types');
+    await queryRunner.query(`
+      DROP TYPE card_types_type_enum;
+      DROP TYPE card_types_group_type_enum;
+    `);
   }
 }

@@ -12,6 +12,10 @@ export class CardTypeService {
     @InjectRepository(CardType) private cardTypeRepository: CardTypeRepository,
   ) {}
 
+  public async checkExist(id: string): Promise<boolean> {
+    return this.cardTypeRepository.exists({ where: { id } });
+  }
+
   public async getAll(): Promise<GotCardTypeDto[]> {
     const cardTypes = await this.cardTypeRepository.find();
 
