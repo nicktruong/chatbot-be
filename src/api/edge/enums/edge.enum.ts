@@ -1,4 +1,4 @@
-export enum Type {
+export enum CardOrNode {
   CARD = 'CARD',
   NODE = 'NODE',
 }

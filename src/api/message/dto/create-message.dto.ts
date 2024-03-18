@@ -1,6 +1,6 @@
 import { IsString, IsUUID } from 'class-validator';
 
-export class SendMessageDto {
+export class CreateMessageDto {
   @IsString()
   value: string;
 
@@ -9,6 +9,9 @@ export class SendMessageDto {
 
   @IsString()
   receiver: string;
+
+  @IsUUID()
+  clientId: string;
 
   @IsUUID()
   botId: string;

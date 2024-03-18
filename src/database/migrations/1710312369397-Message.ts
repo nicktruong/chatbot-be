@@ -18,6 +18,10 @@ export class Message1710312369397 implements MigrationInterface {
             type: 'uuid',
           },
           {
+            name: 'client_id',
+            type: 'uuid',
+          },
+          {
             name: 'value',
             type: 'varchar',
           },

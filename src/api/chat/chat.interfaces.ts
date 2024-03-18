@@ -1,13 +1,14 @@
+import { Server } from 'socket.io';
+
 import type { IWsValidatorExceptionResponse } from '@/filters';
 
 import { Message } from '../message/entities';
-import { SendMessageDto } from './dto';
-
-export interface ClientToServerEvents {
-  message: (payload: SendMessageDto) => void;
-}
 
 export interface ServerToClientEvents {
+  step: (payload: string) => void;
   message: (payload: Message) => void;
+  requireAnswer: (payload: boolean) => void;
   error: (payload: IWsValidatorExceptionResponse) => void;
 }
+
+export type SocketServer = Server<any, ServerToClientEvents>;

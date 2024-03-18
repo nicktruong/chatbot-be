@@ -64,6 +64,14 @@ export class FlowService {
     return flows;
   }
 
+  public async getDefaultFlowByBotId(botId: string): Promise<Flow> {
+    const flow = await this.flowRepository.findOne({
+      where: { flowType: { type: FlowTypeEnum.MAIN }, bot: { id: botId } },
+    });
+
+    return flow;
+  }
+
   public async getById(id: string): Promise<Flow> {
     const flow = await this.flowRepository.findOne({
       where: { id },

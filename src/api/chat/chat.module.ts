@@ -1,12 +1,23 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ChatGateway } from './chat.gateway';
 
+import { FlowModule } from '../flow/flow.module';
+import { NodeModule } from '../node/node.module';
+import { CardModule } from '../card/card.module';
+import { EdgeModule } from '../edge/edge.module';
+import { FieldModule } from '../field/field.module';
 import { MessageModule } from '../message/message.module';
 
 @Module({
-  imports: [MessageModule],
+  imports: [
+    FlowModule,
+    NodeModule,
+    CardModule,
+    EdgeModule,
+    FieldModule,
+    MessageModule,
+  ],
   controllers: [],
   providers: [ChatGateway],
   exports: [],

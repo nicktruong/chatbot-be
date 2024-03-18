@@ -1,4 +1,4 @@
-import { IsString, IsUUID } from 'class-validator';
+import { IsBoolean, IsString, IsUUID } from 'class-validator';
 
 export class SendMessageDto {
   @IsString()
@@ -9,6 +9,15 @@ export class SendMessageDto {
 
   @IsString()
   receiver: string;
+
+  @IsBoolean()
+  answer: boolean;
+
+  @IsString()
+  currentStep: string;
+
+  @IsUUID()
+  clientId: string;
 
   @IsUUID()
   botId: string;
