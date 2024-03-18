@@ -2,7 +2,7 @@ import { WsException } from '@nestjs/websockets';
 import { ValidationError } from 'class-validator';
 import { ArgumentsHost, Catch, HttpException } from '@nestjs/common';
 
-import { SocketServer } from '@/api/chat/chat.gateway';
+import { SocketServer } from '@/api/chat/chat.interfaces';
 import { isDevelopmentEnv, validator } from '@/utils/helpers';
 
 export interface IWsValidatorExceptionResponse {

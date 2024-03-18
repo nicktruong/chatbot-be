@@ -15,6 +15,9 @@ export class Message extends BaseEntity {
   @Column()
   receiver: string;
 
+  @Column({ name: 'client_id' })
+  clientId: string;
+
   @Exclude()
   @ManyToOne(() => Bot)
   @JoinColumn({ name: 'bot_id' })

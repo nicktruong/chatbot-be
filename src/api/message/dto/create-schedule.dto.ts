@@ -1,4 +1,5 @@
-import { IsDateString, IsString, IsUUID } from 'class-validator';
+import { IsDateString, IsUUID } from 'class-validator';
+
 import { SendMessageDto } from './send-message.dto';
 
 export class CreateScheduleDto extends SendMessageDto {

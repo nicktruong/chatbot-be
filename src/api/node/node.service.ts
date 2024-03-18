@@ -44,7 +44,7 @@ export class NodeService {
       nodeType: { type: data.type },
     });
 
-    // Only CUSTOM flow can be created more than one
+    // Only CUSTOM node can be created more than one
     if (count > 0 && data.type !== NodeTypeEnum.CUSTOM) {
       throw new DuplicateUniqueNodeException();
     }
@@ -56,13 +56,18 @@ export class NodeService {
       data.y ??= defaultNode.defaultY;
     }
 
+    let position = -1;
+    if (nodeType.type === NodeTypeEnum.END) position = 2_147_483_647;
+    else if (nodeType.type == NodeTypeEnum.START) position = -1;
+    else position = count;
+
     const node = this.nodeRepository.create({
       flow,
       nodeType,
+      position,
       x: data.x,
       y: data.y,
       id: data.id,
-      position: -1, // TODO: Change position
       name: DEFAULT_NODE_NAME,
     });
 
