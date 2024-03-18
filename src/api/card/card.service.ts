@@ -1,6 +1,6 @@
 import { omit } from 'ramda';
-import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 
 import { Card } from './entities';
 import { CardRepository } from './card.repository';
@@ -12,8 +12,13 @@ import { FieldService } from '../field/field.service';
 export class CardService {
   constructor(
     @InjectRepository(Card) private cardRepository: CardRepository,
+    @Inject(forwardRef(() => FieldService))
     private fieldService: FieldService,
   ) {}
+
+  public async checkExist(id: string): Promise<boolean> {
+    return this.cardRepository.exists({ where: { id } });
+  }
 
   public async create({
     nodeId,
