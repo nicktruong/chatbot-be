@@ -7,6 +7,8 @@ import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 
 import { getPipeOptions } from '@/config';
 import { WsValidatorExceptionsFilter } from '@/filters';
+import { LexerService } from '@/modules/lexer/lexer.service';
+import { EvalService, Ops } from '@/modules/eval/eval.service';
 
 import type { SocketServer } from './chat.interfaces';
 
@@ -35,7 +37,9 @@ export class ChatGateway {
     private nodeService: NodeService,
     private cardService: CardService,
     private edgeService: EdgeService,
+    private evalService: EvalService,
     private fieldService: FieldService,
+    private lexerService: LexerService,
     private messageService: MessageService,
   ) {}
 
@@ -72,10 +76,15 @@ export class ChatGateway {
 
       if (!card) return;
 
+      const fields = await this.fieldService.getCardFields(card.id);
       this.server.emit('requireAnswer', false);
 
       switch (card.cardType.type) {
         case CardTypeEnum.EXPRESSION: {
+          const field = fields.find(
+            (field) => field.fieldType.type === FieldTypeEnum.CONDITION,
+          );
+
           // Get the target node and transition to there
           const edge = await this.edgeService.getByCardOrNodeId(
             card.id,
@@ -86,10 +95,44 @@ export class ChatGateway {
           if (!edge) {
             cardPosition++;
             this.server.emit('step', `${nodePosition}-${cardPosition}`);
-            return;
+            break;
           }
 
-          // TODO: Evaluate expression condition before running the next step
+          // Evaluate expression condition before running the next step
+          const lexer = this.lexerService.parseCondition(field.value);
+
+          // TODO: Support complex arithmetic expressions
+          const tokens: any[] = [];
+
+          for (const token of lexer) {
+            switch (token.type) {
+              case 'number':
+                // Add to array
+                tokens.push(+token.value);
+                break;
+              case 'variable':
+                // Get variable value from this.variables then add to array
+                tokens.push(this.variables[token.value]);
+                break;
+              case 'boolean':
+                tokens.push(token.value);
+                break;
+              case 'operator':
+                // Add to array
+                tokens.push(token.value as Ops);
+                break;
+              default:
+                break;
+            }
+          }
+
+          const result = this.evalService.exe(...tokens);
+
+          if (!result) {
+            cardPosition++;
+            this.server.emit('step', `${nodePosition}-${cardPosition}`);
+            break;
+          }
 
           const targetNode = nodes.find(
             (node) => node.id === edge.targetNodeId,
@@ -101,8 +144,6 @@ export class ChatGateway {
           break;
         }
         case CardTypeEnum.NUMBER: {
-          const fields = await this.fieldService.getCardFields(card.id);
-
           // If message is not an answer then emit to user and ask for a number
           if (!payload.answer) {
             const field = fields.find(
@@ -137,8 +178,6 @@ export class ChatGateway {
           break;
         }
         case CardTypeEnum.TEXT: {
-          const fields = await this.fieldService.getCardFields(card.id);
-
           const field = fields.find(
             (field) => field.fieldType.type === FieldTypeEnum.MESSAGE_TO_SEND,
           );
