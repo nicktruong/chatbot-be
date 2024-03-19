@@ -6,6 +6,7 @@ import {
 import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 
 import { getPipeOptions } from '@/config';
+import { NlpService } from '@/modules/nlp/nlp.service';
 import { WsValidatorExceptionsFilter } from '@/filters';
 import { LexerService } from '@/modules/lexer/lexer.service';
 import { EvalService, Ops } from '@/modules/eval/eval.service';
@@ -33,6 +34,7 @@ export class ChatGateway {
   variables: Record<string, any> = {};
 
   constructor(
+    private nlpService: NlpService,
     private flowService: FlowService,
     private nodeService: NodeService,
     private cardService: CardService,
@@ -166,11 +168,14 @@ export class ChatGateway {
 
           // If message is an answer then store it to temporary variables
           // TODO: If step is persisted then store variable in database
+          // TODO: NLP extract entity
           const variableName = fields.find(
             (field) => field.fieldType.type === FieldTypeEnum.STORE_RESULT_IN,
           ).value;
 
-          this.variables[variableName] = payload.value;
+          this.variables[variableName] = await this.nlpService.extractEntity(
+            payload.value,
+          );
 
           cardPosition++;
 

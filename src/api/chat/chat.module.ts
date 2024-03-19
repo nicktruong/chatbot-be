@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { NlpModule } from '@/modules/nlp/nlp.module';
 import { EvalModule } from '@/modules/eval/eval.module';
 import { LexerModule } from '@/modules/lexer/lexer.module';
 
@@ -14,6 +15,7 @@ import { MessageModule } from '../message/message.module';
 
 @Module({
   imports: [
+    NlpModule,
     FlowModule,
     NodeModule,
     CardModule,
