@@ -1,5 +1,8 @@
 import { Module } from '@nestjs/common';
 
+import { EvalModule } from '@/modules/eval/eval.module';
+import { LexerModule } from '@/modules/lexer/lexer.module';
+
 import { ChatGateway } from './chat.gateway';
 
 import { FlowModule } from '../flow/flow.module';
@@ -15,7 +18,9 @@ import { MessageModule } from '../message/message.module';
     NodeModule,
     CardModule,
     EdgeModule,
+    EvalModule,
     FieldModule,
+    LexerModule,
     MessageModule,
   ],
   controllers: [],

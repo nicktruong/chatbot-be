@@ -70,7 +70,7 @@ export class FieldService {
   public async getCardFields(cardId: string): Promise<Field[]> {
     const fields = await this.fieldRepository.find({
       where: { card: { id: cardId } },
-      relations: { fieldType: true },
+      relations: { fieldType: true, card: true },
       order: { fieldType: { cardTypesFieldTypes: { position: 'ASC' } } },
     });
 

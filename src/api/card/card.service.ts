@@ -31,12 +31,12 @@ export class CardService {
       cardType: { id: cardTypeId },
     });
 
+    await this.cardRepository.save(createdCard);
+
     await this.fieldService.createDefaults({
       cardId: createdCard.id,
       cardTypeId: cardTypeId,
     });
-
-    await this.cardRepository.save(createdCard);
 
     return createdCard;
   }
