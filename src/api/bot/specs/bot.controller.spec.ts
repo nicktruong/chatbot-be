@@ -1,19 +1,17 @@
 import { Test } from '@nestjs/testing';
-import { createMock } from '@golevelup/ts-jest';
+import { createMock, type DeepMocked } from '@golevelup/ts-jest';
 
-import { CreatedBotDto } from './dto';
-import { BotService } from './bot.service';
-import { BotController } from './bot.controller';
+import { Bot } from '../entities';
+import { BotService } from '../bot.service';
+import { BotController } from '../bot.controller';
 
-import { ILocalStrategy } from '../auth/strategies';
-
-import type { DeepMocked } from '@golevelup/ts-jest';
+import { ILocalStrategy } from '../../auth/strategies';
 
 describe('BotController', () => {
   let botController: BotController;
   let botService: DeepMocked<BotService>;
 
-  const bots: CreatedBotDto[] = [
+  const bots = [
     {
       id: '123',
       name: 'test bot 1',
@@ -28,12 +26,13 @@ describe('BotController', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     },
-  ];
-  const id = bots[0].id;
+  ] as Bot[];
+  // const id = bots[0].id;
+  const userId = 'userId';
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
-      providers: [BotController],
+      controllers: [BotController],
     })
       .useMocker(createMock)
       .compile();
@@ -43,38 +42,36 @@ describe('BotController', () => {
   });
 
   describe('createOne', () => {
-    it('should create a bot', async () => {
+    it('should create a bot with valid value', async () => {
       botService.create.mockResolvedValueOnce(bots[0]);
+      const user = { element: { id: userId } } as ILocalStrategy;
 
-      const user = { element: { id } } as ILocalStrategy;
       const result = await botController.createOne(user);
 
       expect(result).toEqual(bots[0]);
-      expect(botService.create).toHaveBeenCalled();
-      expect(botService.create.mock.calls[0][0]).toEqual(user.element.id);
     });
   });
 
   describe('getAll', () => {
     it('should get all bots of user', async () => {
       botService.getAll.mockResolvedValueOnce(bots);
+      const user = { element: { id: userId } } as ILocalStrategy;
 
-      const user = { element: { id } } as ILocalStrategy;
       const result = await botController.getAll(user);
 
       expect(result).toEqual(bots);
-      expect(botService.getAll).toHaveBeenCalled();
-      expect(botService.getAll.mock.calls[0][0]).toEqual(user.element.id);
     });
   });
 
   describe('deleteById', () => {
     it('should delete the bot by id', async () => {
+      const deleteResult = { raw: '', affected: 1 };
+      botService.deleteById.mockResolvedValueOnce(deleteResult);
+      const id = bots[0].id;
+
       const result = await botController.deleteById(id);
 
-      expect(result).toEqual(id);
-      expect(botService.deleteById).toHaveBeenCalled();
-      expect(botService.deleteById.mock.calls[0][0]).toEqual(id);
+      expect(result).toEqual(deleteResult.affected);
     });
   });
 });

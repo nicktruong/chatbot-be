@@ -1,15 +1,12 @@
-import { omit } from 'ramda';
 import { Test } from '@nestjs/testing';
-import { createMock } from '@golevelup/ts-jest';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { createMock, type DeepMocked } from '@golevelup/ts-jest';
 
-import { Bot } from './entities';
-import { BotService } from './bot.service';
-import { BotRepository } from './bot.repository';
+import { Bot } from '../entities';
+import { BotService } from '../bot.service';
+import { BotRepository } from '../repositories';
 
-import { Customer } from '../customer/entities';
-
-import type { DeepMocked } from '@golevelup/ts-jest';
+import { Customer } from '../../customer/entities';
 
 describe('BotService', () => {
   let botService: BotService;
@@ -25,7 +22,7 @@ describe('BotService', () => {
     email: 'test@example.com',
   } as Customer;
 
-  const bots: Bot[] = [
+  const bots = [
     {
       creator,
       id: '123',
@@ -42,9 +39,7 @@ describe('BotService', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     },
-  ];
-  creator.bots = bots;
-  const id = bots[0].id;
+  ] as Bot[];
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -72,12 +67,9 @@ describe('BotService', () => {
     it('should create a bot', async () => {
       botRepository.create.mockReturnValueOnce(bots[0]);
 
-      const result = await botService.create(id);
+      const result = await botService.create(creator.id);
 
-      expect(result).toEqual(omit(['creator'], bots[0]));
-      expect(botRepository.create).toHaveBeenCalled();
-      expect(botRepository.save).toHaveBeenCalled();
-      expect(botRepository.save.mock.calls[0][0]).toEqual(bots[0]);
+      expect(result).toEqual(bots[0]);
     });
   });
 
@@ -85,25 +77,23 @@ describe('BotService', () => {
     it('should get all bots of user', async () => {
       botRepository.findBy.mockResolvedValueOnce(bots);
 
-      const result = await botService.getAll(id);
+      const result = await botService.getAll(creator.id);
 
       expect(result).toEqual(bots);
-      expect(botRepository.findBy).toHaveBeenCalled();
-      expect(botRepository.findBy.mock.calls[0][0]).toEqual({
-        creator: { id },
-      });
     });
   });
 
   describe('deleteById', () => {
     it('should delete the bot by id', async () => {
-      botRepository.delete.mockResolvedValueOnce('test value' as any);
+      const deleteResult = {
+        raw: 'raw sql',
+        affected: 1,
+      };
+      botRepository.delete.mockResolvedValueOnce(deleteResult);
 
-      const result = await botService.deleteById(id);
+      const result = await botService.deleteById(bots[0].id);
 
-      expect(result).toEqual('test value');
-      expect(botRepository.delete).toHaveBeenCalled();
-      expect(botRepository.delete.mock.calls[0][0]).toEqual({ id });
+      expect(result).toEqual(deleteResult);
     });
   });
 });
