@@ -8,9 +8,7 @@ import { LoggingInterceptor, ResponseInterceptor } from '@/interceptors';
 export const loadInterceptors = (app: INestApplication): void => {
   app.useGlobalInterceptors(
     new LoggingInterceptor(),
-    new ClassSerializerInterceptor(app.get(Reflector), {
-      excludeExtraneousValues: true,
-    }),
+    new ClassSerializerInterceptor(app.get(Reflector)),
     new ResponseInterceptor(),
   );
 };

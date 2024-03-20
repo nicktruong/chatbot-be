@@ -34,8 +34,8 @@ export interface IRouteParams<T = any> {
   roles?: UserRole[];
   jwtSecure?: boolean;
   localSecure?: boolean;
+  responseType?: ClassType<T>;
   swaggerInfo?: ISwaggerParams;
-  transformResponseTo?: ClassType<T>;
 }
 
 function Public(): CustomDecorator<string> {
@@ -49,12 +49,12 @@ export function UserRoles(roles: UserRole[]): CustomDecorator<string> {
 export function InjectRoute({
   path = '/',
   roles = [],
-  swaggerInfo = { secure: true },
+  responseType,
   jwtSecure = true,
   localSecure = false,
   code = HttpStatus.OK,
   method = RequestMethod.GET,
-  transformResponseTo,
+  swaggerInfo = { secure: true },
 }: IRouteParams) {
   const methodDecorator = {
     [RequestMethod.GET]: Get,
@@ -81,10 +81,8 @@ export function InjectRoute({
     decorators.push(UseGuards(LocalAuthGuard));
   }
 
-  if (transformResponseTo) {
-    decorators.push(
-      UseInterceptors(new TransformInterceptor(transformResponseTo)),
-    );
+  if (responseType) {
+    decorators.push(UseInterceptors(new TransformInterceptor(responseType)));
   }
 
   return applyDecorators(...decorators);
