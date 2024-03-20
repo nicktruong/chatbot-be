@@ -39,8 +39,17 @@ export class MessageService {
     return schedule;
   }
 
-  public async findByClientId(clientId: string): Promise<Message[]> {
+  public async getByClientId(clientId: string): Promise<Message[]> {
     const messages = await this.messageRepository.find({ where: { clientId } });
+
+    return messages;
+  }
+
+  public async getAll(botId: string): Promise<Message[]> {
+    const messages = await this.messageRepository.find({
+      where: { bot: { id: botId } },
+      order: { createdAt: 'DESC' },
+    });
 
     return messages;
   }

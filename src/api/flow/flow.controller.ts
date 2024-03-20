@@ -15,8 +15,9 @@ export class FlowController {
 
   @InjectRoute(flowRoutes.create)
   public async createOne(@Body() data: CreateFlowDto): Promise<Flow> {
-    const createdBot = await this.flowService.create(data);
-    return createdBot;
+    const createdFlow = await this.flowService.create(data);
+
+    return createdFlow;
   }
 
   @InjectRoute(flowRoutes.getAll)
@@ -24,7 +25,8 @@ export class FlowController {
     @ReqUser() user: ILocalStrategy,
     @Param('botId') botId: string,
   ): Promise<Flow[]> {
-    const createdBot = await this.flowService.getAll(user.element.id, botId);
-    return createdBot;
+    const flows = await this.flowService.getAll(user.element.id, botId);
+
+    return flows;
   }
 }

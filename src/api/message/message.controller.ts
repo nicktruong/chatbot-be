@@ -1,9 +1,12 @@
+import { Body, Param } from '@nestjs/common';
+
 import { InjectController, InjectRoute } from '@/decorators';
-import messageRoutes from './message.routes';
-import { Schedule } from './entities';
+
 import { CreateScheduleDto } from './dto';
+import { Message, Schedule } from './entities';
+
+import messageRoutes from './message.routes';
 import { MessageService } from './message.service';
-import { Body } from '@nestjs/common';
 
 @InjectController({ name: messageRoutes.index })
 export class MessageController {
@@ -14,5 +17,12 @@ export class MessageController {
     const schedule = await this.messageService.scheduleMessage(data);
 
     return schedule;
+  }
+
+  @InjectRoute(messageRoutes.getAll)
+  async getAll(@Param('botId') botId: string): Promise<Message[]> {
+    const messages = await this.messageService.getAll(botId);
+
+    return messages;
   }
 }
