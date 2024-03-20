@@ -12,6 +12,7 @@ import { FlowTypeService } from '../flow-type/flow-type.service';
 // TODO: Auto increment flow name
 // E.g. New Workflow 1, New Workflow 2,...
 const DEFAULT_FLOW_NAME = 'New Workflow';
+const MAIN_FLOW_NAME = 'Main';
 
 @Injectable()
 export class FlowService {
@@ -20,6 +21,16 @@ export class FlowService {
     private flowRepository: FlowRepository,
     private flowTypeService: FlowTypeService,
   ) {}
+
+  public async createDefault(botId: string) {
+    const flow = await this.create({
+      botId,
+      name: MAIN_FLOW_NAME,
+      flowType: FlowTypeEnum.MAIN,
+    });
+
+    return flow;
+  }
 
   public async create(data: CreateFlowDto): Promise<Flow> {
     const flowType = await this.flowTypeService.getByType({

@@ -26,6 +26,18 @@ export class NodeService {
     private nodeTypeService: NodeTypeService,
   ) {}
 
+  public async createDefaults(flowId: string) {
+    await this.create({
+      flowId,
+      type: NodeTypeEnum.START,
+    });
+
+    await this.create({
+      flowId,
+      type: NodeTypeEnum.END,
+    });
+  }
+
   public async create(data: CreateNodeDto): Promise<Node> {
     const flow = await this.flowService.getById(data.flowId);
 
