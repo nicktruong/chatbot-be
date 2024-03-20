@@ -8,6 +8,7 @@ import {
   HttpStatus,
   SetMetadata,
   RequestMethod,
+  UseInterceptors,
   applyDecorators,
   ExecutionContext,
   createParamDecorator,
@@ -16,15 +17,17 @@ import {
 import type { CustomDecorator } from '@nestjs/common';
 
 import { LocalAuthGuard } from '@/api/auth/guards';
+import { TransformInterceptor } from '@/interceptors';
 import { IS_PUBLIC_KEY, ROLES_KEY } from '@/utils/constants';
 
 import type { UserRole } from '@/common/enums';
+import type { ClassType } from '@/common/interfaces';
 
 import { SwaggerApi } from './swagger.decorator';
 
 import type { ISwaggerParams } from './swagger.decorator';
 
-export interface IRouteParams {
+export interface IRouteParams<T = any> {
   path: string;
   code?: number;
   method: number;
@@ -32,6 +35,7 @@ export interface IRouteParams {
   jwtSecure?: boolean;
   localSecure?: boolean;
   swaggerInfo?: ISwaggerParams;
+  transformResponseTo?: ClassType<T>;
 }
 
 function Public(): CustomDecorator<string> {
@@ -50,6 +54,7 @@ export function InjectRoute({
   localSecure = false,
   code = HttpStatus.OK,
   method = RequestMethod.GET,
+  transformResponseTo,
 }: IRouteParams) {
   const methodDecorator = {
     [RequestMethod.GET]: Get,
@@ -74,6 +79,12 @@ export function InjectRoute({
 
   if (localSecure) {
     decorators.push(UseGuards(LocalAuthGuard));
+  }
+
+  if (transformResponseTo) {
+    decorators.push(
+      UseInterceptors(new TransformInterceptor(transformResponseTo)),
+    );
   }
 
   return applyDecorators(...decorators);
