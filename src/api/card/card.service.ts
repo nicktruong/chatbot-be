@@ -41,13 +41,14 @@ export class CardService {
 
     await this.cardRepository.save(createdCard);
 
-    return { ...omit(['node', 'cardType'], createdCard), cardTypeId, nodeId };
+    return createdCard;
   }
 
   public async getAll(nodeId: string): Promise<GotCardDto[]> {
     const cards = await this.cardRepository.find({
       where: { node: { id: nodeId } },
       relations: { cardType: true },
+      order: { position: 'ASC' },
     });
 
     return cards.map((card) => ({
