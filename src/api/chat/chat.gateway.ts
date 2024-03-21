@@ -6,8 +6,9 @@ import {
 import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 
 import { getPipeOptions } from '@/config';
-import { NlpService } from '@/modules/nlp/nlp.service';
 import { WsValidatorExceptionsFilter } from '@/filters';
+
+import { NlpService } from '@/modules/nlp/nlp.service';
 import { LexerService } from '@/modules/lexer/lexer.service';
 import { EvalService, Ops } from '@/modules/eval/eval.service';
 
@@ -24,6 +25,7 @@ import { CardTypeEnum } from '../card-type/card-type.enum';
 import { MessageService } from '../message/message.service';
 import { FieldTypeEnum } from '../field-type/field-type.enum';
 
+// TODO: Validate accessToken
 @WebSocketGateway({ namespace: 'chat', cors: true })
 @UsePipes(new ValidationPipe(getPipeOptions()))
 @UseFilters(WsValidatorExceptionsFilter)

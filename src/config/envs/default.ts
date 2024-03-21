@@ -16,6 +16,7 @@ export const config = {
     username: process.env.DB_USERNAME || 'username',
     password: process.env.DB_PASSWORD || 'password',
     database: process.env.DB_NAME || 'dbname',
+    ssl: process.env.DB_SSL === 'true',
 
     entities: [`${__dirname}/../../api/**/*.entity.{js,ts}`],
 

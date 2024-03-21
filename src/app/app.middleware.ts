@@ -1,9 +1,8 @@
 import helmet from 'helmet';
 import * as compression from 'compression';
 import * as cookieParser from 'cookie-parser';
-import { VersioningType } from '@nestjs/common';
 
-import type { INestApplication } from '@nestjs/common';
+import { VersioningType, type INestApplication } from '@nestjs/common';
 
 export const loadMiddlewares = (app: INestApplication): void => {
   app.setGlobalPrefix('api');
