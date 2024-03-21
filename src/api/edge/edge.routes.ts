@@ -23,4 +23,17 @@ export default {
       responses: [{ status: HttpStatus.OK, type: Edge }],
     },
   },
+  deleteById: <IRouteParams>{
+    path: '/:id',
+    method: RequestMethod.DELETE,
+    roles: [UserRole.CUSTOMER],
+    swaggerInfo: {
+      responses: [
+        {
+          status: HttpStatus.OK,
+          schema: { type: 'number', example: 1 },
+        },
+      ],
+    },
+  },
 };

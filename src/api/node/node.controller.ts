@@ -33,4 +33,11 @@ export class NodeController {
 
     return changedPosition;
   }
+
+  @InjectRoute(nodeRoutes.deleteById)
+  public async DeleteQueryBuilder(@Param('id') id: string): Promise<number> {
+    const { affected } = await this.nodeService.deleteById(id);
+
+    return affected;
+  }
 }

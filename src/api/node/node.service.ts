@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { DeleteResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
 import {
   NodeNotFound,
@@ -114,5 +115,24 @@ export class NodeService {
       y: data.y,
       updatedAt: new Date(),
     };
+  }
+
+  public async deleteById(id: string): Promise<DeleteResult> {
+    const node = await this.nodeRepository.findOne({
+      where: { id },
+      relations: { nodeType: true },
+    });
+
+    if (!node) {
+      throw new NodeNotFound();
+    }
+
+    if ([NodeTypeEnum.START, NodeTypeEnum.END].includes(node.nodeType.type)) {
+      throw new BadRequestException('Can not delete start and end nodes');
+    }
+
+    const result = await this.nodeRepository.delete({ id });
+
+    return result;
   }
 }

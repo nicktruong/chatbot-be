@@ -28,4 +28,11 @@ export class EdgeController {
 
     return edge;
   }
+
+  @InjectRoute(edgeRoutes.deleteById)
+  public async DeleteQueryBuilder(@Param('id') id: string): Promise<number> {
+    const { affected } = await this.edgeService.deleteById(id);
+
+    return affected;
+  }
 }

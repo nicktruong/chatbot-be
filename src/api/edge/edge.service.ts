@@ -1,3 +1,4 @@
+import { DeleteResult } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -51,5 +52,11 @@ export class EdgeService {
     });
 
     return edge;
+  }
+
+  public async deleteById(id: string): Promise<DeleteResult> {
+    const result = await this.edgeRepository.delete({ id });
+
+    return result;
   }
 }
