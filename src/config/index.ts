@@ -22,3 +22,4 @@ export const configuration = async (): Promise<TConfig> => {
 };
 
 export { EnvSchema } from './envs/schema';
+export { getPipeOptions } from './pipe.options';

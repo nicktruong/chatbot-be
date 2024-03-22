@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { Type } from './enums';
 import { Edge } from './entities';
+import { CardOrNode } from './enums';
 import { CreateEdgeDto } from './dto';
 import { EdgeRepository } from './edge.repository';
 
@@ -39,9 +39,9 @@ export class EdgeService {
     return createdEdge;
   }
 
-  public async getByCardOrNodeId(id: string, type: Type): Promise<Edge> {
+  public async getByCardOrNodeId(id: string, type: CardOrNode): Promise<Edge> {
     const condition =
-      type === Type.CARD
+      type === CardOrNode.CARD
         ? { card: { id } }
         : [{ sourceNodeId: id }, { targetNodeId: id }];
 

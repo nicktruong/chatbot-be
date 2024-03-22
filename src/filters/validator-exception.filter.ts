@@ -6,7 +6,7 @@ import type { ArgumentsHost, ExceptionFilter } from '@nestjs/common';
 
 import { Exception } from '@/utils/constants';
 import { ValidatorException } from '@/exceptions';
-import { isDevelopmentEnv } from '@/utils/helpers';
+import { isDevelopmentEnv, validator } from '@/utils/helpers';
 
 import type { IBaseExceptionResponse } from '@/exceptions';
 
@@ -25,21 +25,13 @@ export class ValidatorExceptionFilter implements ExceptionFilter {
     const response = host.switchToHttp().getResponse<Response>();
 
     try {
+      // TODO: Re-Type exception
       const { errors } = exception as unknown as {
         errors: ValidationError[];
       };
-      const firstMessage = errors[0];
-      const dto = firstMessage.target.constructor.name;
 
-      const detail = errors?.reduce((result, { property, constraints }) => {
-        result[property] = Object.values(constraints);
-
-        return result;
-      }, {});
-
-      const firstError = Object.values(
-        Object.values(detail || {})?.[0] || [] || {},
-      );
+      const { firstError, detail, dto } =
+        validator.extractValidationErrorDetail(errors);
 
       let resBody = <IValidatorExceptionResponse>{
         code: Exception.BAD_REQUEST_CODE,

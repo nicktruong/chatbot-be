@@ -18,7 +18,7 @@ export class FieldTypeSeedService {
     },
     {
       question: 'Question to ask the user',
-      type: FieldTypeEnum.QUESTION,
+      type: FieldTypeEnum.NUMBER_QUESTION,
     },
     {
       question: 'Store result in',

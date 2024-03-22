@@ -21,7 +21,7 @@ export class CardTypeFieldTypeSeedService {
     {
       cardType: CardTypeEnum.NUMBER,
       fieldTypes: [
-        { type: FieldTypeEnum.QUESTION, position: 0 },
+        { type: FieldTypeEnum.NUMBER_QUESTION, position: 0 },
         { type: FieldTypeEnum.STORE_RESULT_IN, position: 1 },
       ],
     },
