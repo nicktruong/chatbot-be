@@ -72,13 +72,39 @@ export class ChatGateway {
       const nodeIndex = nodes.findIndex(
         (node) => node.position === nodePosition,
       );
+
       if (nodeIndex === -1) return;
 
       const card = cardsOfNodes[nodeIndex].find(
         (card) => card.position === cardPosition,
       );
 
-      if (!card) return;
+      if (!card) {
+        const edge = await this.edgeService.getByCardOrNodeId(
+          nodes[nodeIndex].id,
+          CardOrNode.NODE,
+        );
+
+        if (edge) {
+          const targetNode = nodes.find(
+            (node) => node.id === edge.targetNodeId,
+          );
+
+          if (targetNode.position === nodePosition) {
+            // If no card and current nodePosition is the target node
+            // => return to prevent infinite loop
+            return;
+          }
+
+          nodePosition = targetNode.position;
+          cardPosition = 0;
+          this.server.emit('step', `${nodePosition}-${cardPosition}`);
+
+          continue;
+        }
+
+        return;
+      }
 
       const fields = await this.fieldService.getCardFields(card.id);
       this.server.emit('requireAnswer', false);
