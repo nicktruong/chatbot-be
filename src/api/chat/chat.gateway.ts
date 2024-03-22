@@ -80,7 +80,7 @@ export class ChatGateway {
       );
 
       if (!card) {
-        const edge = await this.edgeService.getByCardOrNodeId(
+        const edge = await this.edgeService.getOneByCardOrSourceNodeId(
           nodes[nodeIndex].id,
           CardOrNode.NODE,
         );
@@ -116,7 +116,7 @@ export class ChatGateway {
           );
 
           // Get the target node and transition to there
-          const edge = await this.edgeService.getByCardOrNodeId(
+          const edge = await this.edgeService.getOneByCardOrSourceNodeId(
             card.id,
             CardOrNode.CARD,
           );

@@ -23,7 +23,7 @@ export class EdgeController {
   public async getByCardOrNodeId(
     @Param('id') id: string,
     @Query('type') type: CardOrNode,
-  ): Promise<Edge> {
+  ): Promise<Edge[]> {
     const edge = await this.edgeService.getByCardOrNodeId(id, type);
 
     return edge;

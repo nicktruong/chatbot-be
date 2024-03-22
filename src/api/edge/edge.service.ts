@@ -18,14 +18,21 @@ export class EdgeService {
   }: CreateEdgeDto): Promise<Edge> {
     // Remove edges beforing creating new edges to prevent:
     // - one card | node can link to multiple targets
-    // - multiple cards link to one target
-    const edges = await this.edgeRepository.find({
-      where: [
-        { targetNodeId },
-        !cardId && { sourceNodeId },
-        cardId && { card: { id: cardId } },
-      ],
+    let edges = await this.edgeRepository.find({
+      where: {
+        sourceNodeId,
+        card: { id: cardId },
+      },
+      relations: {
+        card: true,
+      },
     });
+
+    // If the payload only includes sourceNodeId & targetNodeId
+    // => filter out all the edges include cardId to get the correct edge
+    if (!cardId) {
+      edges = edges.filter((edge) => !edge.card);
+    }
 
     await this.edgeRepository.remove(edges);
 
@@ -40,11 +47,29 @@ export class EdgeService {
     return createdEdge;
   }
 
-  public async getByCardOrNodeId(id: string, type: CardOrNode): Promise<Edge> {
+  public async getByCardOrNodeId(
+    id: string,
+    type: CardOrNode,
+  ): Promise<Edge[]> {
     const condition =
       type === CardOrNode.CARD
         ? { card: { id } }
         : [{ sourceNodeId: id }, { targetNodeId: id }];
+
+    const edges = await this.edgeRepository.find({
+      where: condition,
+      relations: { card: true },
+    });
+
+    return edges;
+  }
+
+  public async getOneByCardOrSourceNodeId(
+    id: string,
+    type: CardOrNode,
+  ): Promise<Edge> {
+    const condition =
+      type === CardOrNode.CARD ? { card: { id } } : { sourceNodeId: id };
 
     const edge = await this.edgeRepository.findOne({
       where: condition,
