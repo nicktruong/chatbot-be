@@ -22,6 +22,10 @@ export class Message1710312369397 implements MigrationInterface {
             type: 'uuid',
           },
           {
+            name: 'is_read',
+            type: 'boolean',
+          },
+          {
             name: 'value',
             type: 'varchar',
           },

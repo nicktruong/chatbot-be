@@ -15,6 +15,9 @@ export class Message extends BaseEntity {
   @Column()
   receiver: string;
 
+  @Column({ name: 'is_read' })
+  isRead: boolean;
+
   @Column({ name: 'client_id' })
   clientId: string;
 

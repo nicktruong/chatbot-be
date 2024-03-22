@@ -20,6 +20,7 @@ export class MessageService {
       sender,
       receiver,
       clientId,
+      isRead: false,
       bot: { id: botId },
     });
 
