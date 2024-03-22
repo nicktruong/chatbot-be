@@ -1,4 +1,4 @@
-import { omit } from 'ramda';
+import { DeleteResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 
@@ -20,12 +20,17 @@ export class CardService {
     return this.cardRepository.exists({ where: { id } });
   }
 
-  public async create({ nodeId, cardTypeId }: CreateCardDto): Promise<Card> {
+  public async create({
+    id,
+    nodeId,
+    cardTypeId,
+  }: CreateCardDto): Promise<Card> {
     const count = await this.cardRepository.count({
       where: { node: { id: nodeId } },
     });
 
     const createdCard = this.cardRepository.create({
+      id,
       position: count,
       node: { id: nodeId },
       cardType: { id: cardTypeId },
@@ -49,5 +54,9 @@ export class CardService {
     });
 
     return cards;
+  }
+
+  public async deleteById(id: string): Promise<DeleteResult> {
+    return this.cardRepository.delete({ id });
   }
 }

@@ -4,6 +4,7 @@ import { InjectController, InjectRoute } from '@/decorators';
 
 import { Card } from './entities';
 import { CreateCardDto } from './dto';
+
 import cardRoutes from './card.routes';
 import { CardService } from './card.service';
 
@@ -23,5 +24,12 @@ export class CardController {
     const cards = await this.cardService.getAll(nodeId);
 
     return cards;
+  }
+
+  @InjectRoute(cardRoutes.deleteById)
+  public async deleteById(@Param('id') id: string): Promise<number> {
+    const { affected } = await this.cardService.deleteById(id);
+
+    return affected;
   }
 }
