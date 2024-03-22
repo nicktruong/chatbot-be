@@ -36,7 +36,7 @@ export class NodeTypeSeedService {
           defaultX: 500,
           defaultY: 600,
           type: NodeTypeEnum.CUSTOM,
-          desc: '',
+          desc: 'Add instructions (send content, execute code or ask for information) and transitions on this node',
         }),
       );
       await this.repository.save(
