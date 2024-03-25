@@ -7,7 +7,7 @@ export type OpToFncMapping =
       [K in Exclude<Ops, ''>]: (operand1: number, operand2: number) => boolean;
     }
   | {
-      '': (operand1: string) => boolean;
+      '': (operand1: string) => boolean; // In case user just input "true" or "false" condition
     };
 
 @Injectable()

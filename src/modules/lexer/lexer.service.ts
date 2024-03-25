@@ -3,8 +3,8 @@ const moo = require('moo');
 import { Injectable } from '@nestjs/common';
 
 const lexer = moo.compile({
-  WS: /[ \t]+/,
   number: /\d*\.?\d+/,
+  whitespace: /[ \t]+/,
   boolean: ['true', 'false'],
   variable: /[a-zA-Z_$][\w_$]*/,
   operator: ['===', '!==', '>', '>=', '<', '<='],
