@@ -4,6 +4,7 @@ import {
   forwardRef,
   NotFoundException,
 } from '@nestjs/common';
+import { FindOptionsWhere } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Field } from './entities';
@@ -67,9 +68,12 @@ export class FieldService {
     await this.fieldRepository.update({ id: fieldId }, { value: data.value });
   }
 
-  public async getCardFields(cardId: string): Promise<Field[]> {
+  public async getCardFields(
+    cardId: string,
+    opts?: FindOptionsWhere<Field> | FindOptionsWhere<Field>[],
+  ): Promise<Field[]> {
     const fields = await this.fieldRepository.find({
-      where: { card: { id: cardId } },
+      where: { ...opts, card: { id: cardId } },
       relations: { fieldType: true, card: true },
       order: { fieldType: { cardTypesFieldTypes: { position: 'ASC' } } },
     });

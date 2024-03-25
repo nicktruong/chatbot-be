@@ -71,10 +71,14 @@ export class EdgeService {
     const condition =
       type === CardOrNode.CARD ? { card: { id } } : { sourceNodeId: id };
 
-    const edge = await this.edgeRepository.findOne({
+    const edges = await this.edgeRepository.find({
       where: condition,
       relations: { card: true },
     });
+
+    const edge = edges
+      .filter((edge) => (type === CardOrNode.NODE ? !edge.cardId : true))
+      .at(0);
 
     return edge;
   }

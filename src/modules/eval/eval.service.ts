@@ -22,7 +22,7 @@ export class EvalService {
     '>=': (operand1: number, operand2: number) => operand1 >= operand2,
   };
 
-  exe(operand1?: any, op: Ops = '', operand2?: any) {
+  exe(operand1?: string | number, op: Ops = '', operand2?: number) {
     return this.cbs[op]?.(operand1, operand2);
   }
 }
