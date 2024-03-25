@@ -1,6 +1,10 @@
 import { ValidationError } from 'class-validator';
 
-const extractValidationErrorDetail = (errors: ValidationError[]) => {
+function extractValidationErrorDetail(errors: ValidationError[]): {
+  dto: string;
+  firstError: any[];
+  detail: { [key: string]: string[] };
+} {
   const firstMessage = errors[0];
   const dto = firstMessage.target.constructor.name;
 
@@ -15,7 +19,7 @@ const extractValidationErrorDetail = (errors: ValidationError[]) => {
   );
 
   return { dto, detail, firstError };
-};
+}
 
 export default {
   extractValidationErrorDetail,

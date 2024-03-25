@@ -9,6 +9,7 @@ function getKeyByValue<E>({
     .filter((elm) => isNaN(Number(elm[0])))
     .find((elm) => elm[1]?.toString() === value?.toString())?.[0];
 }
+
 function convertToRegex<E>(data: E): string {
   return `${Object.values(data)
     .filter((elm) => isNaN(Number(elm)))
@@ -24,6 +25,7 @@ function getValuesAndToString<E>(data: E): string[] {
     .filter((elm) => isNaN(Number(elm)))
     .map((elm) => elm.toString());
 }
+
 export default {
   getFirstKey,
   getKeyByValue,
