@@ -1,11 +1,12 @@
-import { IsDateString, IsUUID } from 'class-validator';
+import { IsDateString, IsOptional, IsUUID } from 'class-validator';
 
-import { SendMessageDto } from './send-message.dto';
+import { CreateMessageDto } from './create-message.dto';
 
-export class CreateScheduleDto extends SendMessageDto {
+export class CreateScheduleDto extends CreateMessageDto {
   @IsDateString()
   scheduledDate: string;
 
   @IsUUID()
+  @IsOptional()
   messageId: string;
 }

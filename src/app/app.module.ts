@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 
 import { AppController } from './app.controller';
 
@@ -15,9 +16,14 @@ import { TokenModule } from '@/api/token/token.module';
 import { AdminModule } from '@/api/admin/admin.module';
 import { DatabaseModule } from '@/database/database.module';
 import { MessageModule } from '@/api/message/message.module';
+import { SocketModule } from '@/modules/socket/socket.module';
 import { CustomerModule } from '@/api/customer/customer.module';
 import { CardTypeModule } from '@/api/card-type/card-type.module';
 import { FlowTypeModule } from '@/api/flow-type/flow-type.module';
+
+import { StepProcessorModule } from '@/modules/step-processor/step-processor.module';
+
+import { AppGateway } from './app.gateway';
 
 @Module({
   imports: [
@@ -25,6 +31,7 @@ import { FlowTypeModule } from '@/api/flow-type/flow-type.module';
       validationSchema: EnvSchema,
       load: [configuration],
     }),
+    ScheduleModule.forRoot(),
     BotModule,
     AuthModule,
     CardModule,
@@ -34,13 +41,15 @@ import { FlowTypeModule } from '@/api/flow-type/flow-type.module';
     ChatModule,
     TokenModule,
     AdminModule,
+    SocketModule,
     MessageModule,
     CustomerModule,
     DatabaseModule,
     CardTypeModule,
     FlowTypeModule,
+    StepProcessorModule,
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [AppGateway],
 })
 export class AppModule {}

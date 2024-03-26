@@ -8,7 +8,6 @@ import { NodeService } from '@/api/node/node.service';
 import { CardService } from '@/api/card/card.service';
 import { EdgeService } from '@/api/edge/edge.service';
 import { FieldService } from '@/api/field/field.service';
-import { SocketServer } from '@/api/chat/chat.interfaces';
 import { CardTypeEnum } from '@/api/card-type/card-type.enum';
 import { MessageService } from '@/api/message/message.service';
 import { FieldTypeEnum } from '@/api/field-type/field-type.enum';
@@ -17,6 +16,7 @@ import { CreateMessageDto, SendMessageDto } from '@/api/message/dto';
 import { NlpService } from '../nlp/nlp.service';
 import { EvalService } from '../eval/eval.service';
 import { LexerService } from '../lexer/lexer.service';
+import { SocketService } from '../socket/socket.service';
 
 @Injectable()
 export class StepProcessorService {
@@ -30,18 +30,16 @@ export class StepProcessorService {
     private evalService: EvalService,
     private fieldService: FieldService,
     private lexerService: LexerService,
+    private socketService: SocketService,
     private messageService: MessageService,
   ) {}
 
-  async sendMessage(
-    server: SocketServer,
-    data: CreateMessageDto,
-  ): Promise<void> {
+  async sendMessage(data: CreateMessageDto): Promise<void> {
     const message = await this.messageService.createMessage(data);
-    server.emit('message', message);
+    this.socketService.socket.emit('message', message);
   }
 
-  async processStep(server: SocketServer, flow: Flow, payload: SendMessageDto) {
+  async processStep(flow: Flow, payload: SendMessageDto) {
     // currentStep is created in the form `${nodePos}-${cardPos}`
     // in order to easily retrieve the current card logic
     const [nodePos, cardPos] = payload.currentStep.split('-');
@@ -81,7 +79,10 @@ export class StepProcessorService {
 
           cardPosition = 0;
           nodePosition = targetNode.position;
-          server.emit('step', `${nodePosition}-${cardPosition}`);
+          this.socketService.socket.emit(
+            'step',
+            `${nodePosition}-${cardPosition}`,
+          );
 
           continue;
         }
@@ -89,7 +90,7 @@ export class StepProcessorService {
         return;
       }
 
-      server.emit('requireAnswer', false);
+      this.socketService.socket.emit('requireAnswer', false);
 
       switch (card.cardType.type) {
         case CardTypeEnum.EXPRESSION: {
@@ -105,7 +106,6 @@ export class StepProcessorService {
         case CardTypeEnum.NUMBER: {
           ({ cardPosition } = await this.processNumberCard({
             card,
-            server,
             payload,
             cardPosition,
           }));
@@ -115,7 +115,6 @@ export class StepProcessorService {
         case CardTypeEnum.TEXT: {
           ({ cardPosition } = await this.processTextCard({
             card,
-            server,
             payload,
             cardPosition,
           }));
@@ -126,7 +125,7 @@ export class StepProcessorService {
           break;
       }
 
-      server.emit('step', `${nodePosition}-${cardPosition}`);
+      this.socketService.socket.emit('step', `${nodePosition}-${cardPosition}`);
 
       if (!payload.answer && card.cardType.type === CardTypeEnum.NUMBER) return;
     }
@@ -200,12 +199,10 @@ export class StepProcessorService {
 
   async processNumberCard({
     card,
-    server,
     payload,
     cardPosition,
   }: {
     card: Card;
-    server: SocketServer;
     cardPosition: number;
     payload: SendMessageDto;
   }): Promise<{ cardPosition: number }> {
@@ -215,7 +212,7 @@ export class StepProcessorService {
         fieldType: { type: FieldTypeEnum.NUMBER_QUESTION },
       });
 
-      await this.sendMessage(server, {
+      await this.sendMessage({
         value: field.value,
         botId: payload.botId,
         sender: payload.botId,
@@ -223,7 +220,7 @@ export class StepProcessorService {
         clientId: payload.clientId,
       });
 
-      server.emit('requireAnswer', true);
+      this.socketService.socket.emit('requireAnswer', true);
 
       return { cardPosition };
     }
@@ -246,12 +243,10 @@ export class StepProcessorService {
 
   async processTextCard({
     card,
-    server,
     payload,
     cardPosition,
   }: {
     card: Card;
-    server: SocketServer;
     cardPosition: number;
     payload: SendMessageDto;
   }): Promise<{ cardPosition: number }> {
@@ -259,7 +254,7 @@ export class StepProcessorService {
       fieldType: { type: FieldTypeEnum.MESSAGE_TO_SEND },
     });
 
-    await this.sendMessage(server, {
+    await this.sendMessage({
       value: field.value,
       botId: payload.botId,
       sender: payload.botId,
