@@ -1,7 +1,7 @@
 import { compareSync } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { AdminService } from '@/api/admin/admin.service';
 import { CustomerService } from '@/api/customer/customer.service';
@@ -16,7 +16,12 @@ import {
   WrongCredentialsException,
 } from './auth.exceptions';
 
-import type { RegisterDto, LoggedInDto, RegisteredDto } from './dto';
+import type {
+  RegisterDto,
+  LoggedInDto,
+  RefreshedDto,
+  RegisteredDto,
+} from './dto';
 
 import type {
   ITokenPayload,
@@ -30,6 +35,11 @@ export type TUser = Admin | Customer;
 
 @Injectable()
 export class AuthService {
+  services = {
+    [UserRole[UserRole.ADMIN]]: this.adminService,
+    [UserRole[UserRole.CUSTOMER]]: this.customerService,
+  };
+
   constructor(
     private jwtService: JwtService,
     private adminService: AdminService,
@@ -94,12 +104,7 @@ export class AuthService {
     role,
     password,
   }: IValidateUserParams): Promise<TUser> {
-    const services = {
-      [UserRole[UserRole.ADMIN]]: this.adminService,
-      [UserRole[UserRole.CUSTOMER]]: this.customerService,
-    };
-
-    const userService = services[role];
+    const userService = this.services[role];
 
     const user = await userService.findOneByEmail(email);
 
@@ -114,12 +119,7 @@ export class AuthService {
     email,
     role,
   }: IValidateJwtUserParams): Promise<TUser> {
-    const services = {
-      [UserRole[UserRole.ADMIN]]: this.adminService,
-      [UserRole[UserRole.CUSTOMER]]: this.customerService,
-    };
-
-    const userService = services[role];
+    const userService = this.services[role];
 
     const user = await userService.findOneByEmail(email);
 
@@ -128,5 +128,51 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  public async refreshToken(refreshToken: string): Promise<RefreshedDto> {
+    if (!refreshToken) {
+      throw new UnauthorizedException('Invalid Token');
+    }
+
+    const { role, email }: ITokenPayload = await this.jwtService.verifyAsync(
+      refreshToken,
+      {
+        secret: this.configService.get('jwt.refreshSecret'),
+      },
+    );
+    const userService = this.services[role];
+
+    const user = await userService.findOneByEmail(email);
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid Token');
+    }
+
+    const payload = { role, email };
+
+    const newAccessToken = this.jwtService.sign(payload, {
+      secret: this.configService.get('jwt.secret'),
+      expiresIn: this.configService.get('token.authentication.lifetime') / 1000,
+    });
+
+    const newRefreshToken = this.jwtService.sign(payload, {
+      secret: this.configService.get('jwt.refreshSecret'),
+      expiresIn:
+        (this.configService.get('token.authentication.lifetime') / 1000) *
+        this.configService.get('token.authentication.renewedTimes'), // access token will be only renewed n times with refresh token
+    });
+
+    await this.tokenService.create({
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+      userRole: payload.role,
+      userId: user.id,
+    });
+
+    return {
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    };
   }
 }

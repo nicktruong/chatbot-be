@@ -8,8 +8,8 @@ import { AuthService } from './auth.service';
 
 import { RegisterDto } from './dto';
 
-import type { LoggedInDto, RegisteredDto } from './dto';
 import { ILocalStrategy } from './strategies';
+import type { LoggedInDto, RefreshedDto, RegisteredDto } from './dto';
 
 @InjectController({ name: authRoutes.index, isCore: true })
 export class AuthController {
@@ -27,5 +27,14 @@ export class AuthController {
     const loggedInUser = await this.authService.login(user);
 
     return loggedInUser;
+  }
+
+  @InjectRoute(authRoutes.refreshToken)
+  public async refreshToken(
+    @Body('refreshToken') refreshToken: string,
+  ): Promise<RefreshedDto> {
+    const tokens = await this.authService.refreshToken(refreshToken);
+
+    return tokens;
   }
 }

@@ -2,7 +2,7 @@ import { HttpStatus, RequestMethod } from '@nestjs/common';
 
 import type { IRouteParams } from '@/decorators';
 
-import { LogInDto, LoggedInDto, RegisteredDto } from './dto';
+import { LogInDto, LoggedInDto, RefreshedDto, RegisteredDto } from './dto';
 
 export default {
   index: 'auth',
@@ -22,10 +22,18 @@ export default {
     code: HttpStatus.OK,
     method: RequestMethod.POST,
     swaggerInfo: {
-      body: {
-        type: LogInDto,
-      },
+      body: { type: LogInDto },
       responses: [{ status: HttpStatus.OK, type: LoggedInDto }],
+    },
+  },
+  refreshToken: <IRouteParams>{
+    path: '/refresh',
+    jwtSecure: false,
+    localSecure: false,
+    code: HttpStatus.OK,
+    method: RequestMethod.POST,
+    swaggerInfo: {
+      responses: [{ status: HttpStatus.OK, type: RefreshedDto }],
     },
   },
 };
