@@ -1,4 +1,4 @@
-import { Body } from '@nestjs/common';
+import { Body, Headers } from '@nestjs/common';
 
 import { InjectRoute, InjectController, ReqUser } from '@/decorators';
 
@@ -27,6 +27,17 @@ export class AuthController {
     const loggedInUser = await this.authService.login(user);
 
     return loggedInUser;
+  }
+
+  @InjectRoute(authRoutes.logout)
+  public async logout(
+    @Headers('Authorization') bearerToken: string,
+    @ReqUser() user: ILocalStrategy,
+  ): Promise<void> {
+    await this.authService.logout({
+      id: user.element.id,
+      bearerToken,
+    });
   }
 
   @InjectRoute(authRoutes.refreshToken)

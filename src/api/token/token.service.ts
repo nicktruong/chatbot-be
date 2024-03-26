@@ -37,4 +37,32 @@ export class TokenService {
 
     return sessions;
   }
+
+  public async checkTokenValid({
+    id,
+    accessToken,
+  }: {
+    id: string;
+    accessToken: string;
+  }) {
+    const tokensLength = await this.tokenRepository.countBy({
+      userId: id,
+      accessToken,
+    });
+
+    return tokensLength > 0;
+  }
+
+  public async removeToken({
+    id,
+    accessToken,
+  }: {
+    id: string;
+    accessToken: string;
+  }) {
+    await this.tokenRepository.delete({
+      userId: id,
+      accessToken,
+    });
+  }
 }

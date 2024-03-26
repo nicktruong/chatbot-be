@@ -1,3 +1,4 @@
+import type { Request } from 'express';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
@@ -22,14 +23,24 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private readonly authService: AuthService,
   ) {
     super({
+      passReqToCallback: true,
       ignoreExpiration: false,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: configService.get('jwt.secret'),
     });
   }
 
-  async validate({ email, role }: ITokenPayload): Promise<IJwtStrategy> {
-    const user = await this.authService.validateJwtUser({ email, role });
+  async validate(
+    req: Request,
+    { email, role }: ITokenPayload,
+  ): Promise<IJwtStrategy> {
+    const accessToken = req.headers.authorization.split(' ')[1];
+
+    const user = await this.authService.validateJwtUser({
+      role,
+      email,
+      accessToken,
+    });
 
     return {
       role,

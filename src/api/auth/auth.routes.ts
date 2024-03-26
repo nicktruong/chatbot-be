@@ -26,6 +26,15 @@ export default {
       responses: [{ status: HttpStatus.OK, type: LoggedInDto }],
     },
   },
+  logout: <IRouteParams>{
+    path: '/logout',
+    jwtSecure: true,
+    code: HttpStatus.OK,
+    method: RequestMethod.POST,
+    swaggerInfo: {
+      responses: [{ status: HttpStatus.OK }],
+    },
+  },
   refreshToken: <IRouteParams>{
     path: '/refresh',
     jwtSecure: false,

@@ -9,6 +9,7 @@ export interface IValidateUserParams {
 export interface IValidateJwtUserParams {
   email: string;
   role: UserRole;
+  accessToken: string;
 }
 
 export interface ITokenPayload {

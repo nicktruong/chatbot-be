@@ -99,6 +99,19 @@ export class AuthService {
     };
   }
 
+  public async logout({
+    id,
+    bearerToken,
+  }: {
+    id: string;
+    bearerToken: string;
+  }) {
+    await this.tokenService.removeToken({
+      id,
+      accessToken: bearerToken.split(' ')[1],
+    });
+  }
+
   public async validateUser({
     email,
     role,
@@ -116,14 +129,24 @@ export class AuthService {
   }
 
   public async validateJwtUser({
-    email,
     role,
+    email,
+    accessToken,
   }: IValidateJwtUserParams): Promise<TUser> {
     const userService = this.services[role];
 
     const user = await userService.findOneByEmail(email);
 
     if (!user) {
+      throw new WrongCredentialsException();
+    }
+
+    const tokenValid = await this.tokenService.checkTokenValid({
+      id: user.id,
+      accessToken,
+    });
+
+    if (!tokenValid) {
       throw new WrongCredentialsException();
     }
 
