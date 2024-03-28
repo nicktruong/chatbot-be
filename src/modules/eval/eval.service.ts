@@ -1,28 +1,37 @@
-import { Injectable } from '@nestjs/common';
+import { spawn } from 'node:child_process';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 
-export type Ops = '' | '===' | '!==' | '>' | '>=' | '<' | '<=';
+type ResolveFn = (value: unknown) => void;
 
-export type OpToFncMapping =
-  | {
-      [K in Exclude<Ops, ''>]: (operand1: number, operand2: number) => boolean;
-    }
-  | {
-      '': (operand1: string) => boolean; // In case user just input "true" or "false" condition
-    };
+const Future = (fn: (resolve: ResolveFn) => void) => {
+  return new Promise((resolve) => fn(resolve));
+};
 
 @Injectable()
 export class EvalService {
-  cbs: OpToFncMapping = {
-    '': (operand1: string) => operand1 === 'true',
-    '===': (operand1: number, operand2: number) => operand1 === operand2,
-    '!==': (operand1: number, operand2: number) => operand1 !== operand2,
-    '<': (operand1: number, operand2: number) => operand1 < operand2,
-    '<=': (operand1: number, operand2: number) => operand1 <= operand2,
-    '>': (operand1: number, operand2: number) => operand1 > operand2,
-    '>=': (operand1: number, operand2: number) => operand1 >= operand2,
-  };
+  async eval(command: string, context: any) {
+    Object.keys(context).forEach((key) => {
+      command = command.replaceAll(key, context[key]);
+    });
 
-  exe(operand1?: string | number, op: Ops = '', operand2?: number) {
-    return this.cbs[op]?.(operand1, operand2);
+    const child = spawn('node', ['-e', `console.log(${command})`]);
+
+    setTimeout(() => {
+      child.kill();
+    }, 5000);
+
+    const eventFn = (resolve: ResolveFn) => {
+      child.stdout.on('data', (data) => {
+        resolve(data.toString() === 'true\n');
+      });
+
+      child.stdout.on('error', (error) => {
+        throw new InternalServerErrorException('Error condition');
+      });
+    };
+
+    const result = await Future(eventFn);
+
+    return result;
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 
 import { Flow } from '@/api/flow/entities';
 import { Card } from '@/api/card/entities';
@@ -48,46 +48,21 @@ export class StepProcessorService {
       cardPosition = +cardPos;
 
     // TODO: Cache redis
-    const nodes = await this.nodeService.getAll(flow.id);
-    const cardsOfNodes = await Promise.all(
-      nodes.map((node) => this.cardService.getAll(node.id)),
-    );
+    const nodes = await this.nodeService.getAll(flow.id, {
+      cards: { cardType: true },
+    });
 
     while (true) {
-      const nodeIndex = nodes.findIndex(
-        (node) => node.position === nodePosition,
-      );
+      if (!nodes[nodePosition]) return;
 
-      if (nodeIndex === -1) return;
-
-      const card = cardsOfNodes[nodeIndex].find(
-        (card) => card.position === cardPosition,
-      );
+      const card = nodes[nodePosition].cards[cardPosition];
 
       if (!card) {
-        const edge = await this.edgeService.getOneByCardOrSourceNodeId(
-          nodes[nodeIndex].id,
-          CardOrNode.NODE,
-        );
+        const result = await this.handleNodeTransition(nodes, nodePosition);
+        if (!result) return;
 
-        // If there isn't any card left but still have an edge between nodes
-        // Transition to the target node
-        if (edge) {
-          const targetNode = nodes.find(
-            (node) => node.id === edge.targetNodeId,
-          );
-
-          cardPosition = 0;
-          nodePosition = targetNode.position;
-          this.socketService.socket.emit(
-            'step',
-            `${nodePosition}-${cardPosition}`,
-          );
-
-          continue;
-        }
-
-        return;
+        ({ cardPosition, nodePosition } = result);
+        continue;
       }
 
       this.socketService.socket.emit('requireAnswer', false);
@@ -131,6 +106,23 @@ export class StepProcessorService {
     }
   }
 
+  async handleNodeTransition(nodes: Node[], nodePosition: number) {
+    const edge = await this.edgeService.getOneByCardOrSourceNodeId(
+      nodes[nodePosition].id,
+      CardOrNode.NODE,
+    );
+
+    const targetNode = nodes.find((node) => node.id === edge?.targetNodeId);
+
+    if (!edge || !targetNode) return;
+
+    const cardPosition = 0;
+    nodePosition = targetNode.position;
+    this.socketService.socket.emit('step', `${nodePosition}-${cardPosition}`);
+
+    return { cardPosition, nodePosition };
+  }
+
   async processExpressionCard({
     card,
     nodes,
@@ -160,29 +152,21 @@ export class StepProcessorService {
 
     // Evaluate expression condition before running the next step
     const lexer = this.lexerService.parseCondition(field.value);
+    const tokens = Array.from(lexer);
 
-    // TODO: Support complex arithmetic expressions
-    const tokens: any[] = [];
+    const regex = new RegExp(new RegExp(Object.keys(this.variables).join('|')));
 
-    for (const token of lexer) {
-      switch (token.type) {
-        case 'variable':
-          // Get variable value from this.variables then add to array
-          tokens.push(this.variables[token.value]);
-          break;
-        case 'number':
-          tokens.push(+token.value);
-          break;
-        case 'boolean':
-        case 'operator':
-          tokens.push(token.value);
-          break;
-        default:
-          break;
-      }
-    }
+    tokens
+      .filter((token: any) => token.type === 'variable')
+      .forEach((token: any) => {
+        const valid = regex.test(token.value);
 
-    const result = this.evalService.exe(...tokens);
+        if (!valid) {
+          throw new InternalServerErrorException('Invalid custom code');
+        }
+      });
+
+    const result = await this.evalService.eval(field.value, this.variables);
 
     if (!result) {
       cardPosition++;

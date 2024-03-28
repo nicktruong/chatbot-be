@@ -1,5 +1,5 @@
-import { DeleteResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DeleteResult, FindOptionsRelations } from 'typeorm';
 import { BadRequestException, Injectable } from '@nestjs/common';
 
 import {
@@ -89,10 +89,13 @@ export class NodeService {
     return node;
   }
 
-  public async getAll(flowId: string): Promise<Node[]> {
+  public async getAll(
+    flowId: string,
+    relations?: FindOptionsRelations<Node>,
+  ): Promise<Node[]> {
     const nodes = await this.nodeRepository.find({
       where: { flow: { id: flowId } },
-      relations: { nodeType: true },
+      relations: { nodeType: true, ...relations },
     });
 
     return nodes;

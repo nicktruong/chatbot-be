@@ -7,7 +7,7 @@ const lexer = moo.compile({
   whitespace: /[ \t]+/,
   boolean: ['true', 'false'],
   variable: /[a-zA-Z_$][\w_$]*/,
-  operator: ['===', '!==', '>', '>=', '<', '<='],
+  operator: ['===', '!==', '>', '>=', '<', '<=', '&&', '||'],
 });
 
 @Injectable()
